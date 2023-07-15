@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <executable name="dist/default/production/NixieAlarmClock.X.production.elf">
+    <memory name="data">
+      <units>bytes</units>
+      <length>16384</length>
+      <used>2618</used>
+      <free>13766</free>
+    </memory>
+    <memory name="program">
+      <units>bytes</units>
+      <length>66816</length>
+      <used>58218</used>
+      <free>8598</free>
+    </memory>
+  </executable>
+</project>
