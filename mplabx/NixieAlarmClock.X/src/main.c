@@ -53,7 +53,7 @@
 #include "tmr1.h"
 #include "time/millis.h"
 #include "time/delay.h"
-#include "input/input.h"
+#include "tasks/buttons.h"
 #include "hardware/display.h"
 #include "hardware/player.h"
 #include "hardware/PAM8407.h"
@@ -86,8 +86,8 @@ int main(void)
     // Load settings
     SETTINGS_Load(&settings);
     
-    // Inputs initialization
-    INPUTS_Initialize();
+    // Initialize buttons task
+    BTN_Initialize();
     
     // Display init
     DISPLAY_Initialize();
@@ -129,8 +129,8 @@ int main(void)
             O_LED_Toggle();
         }
         
-        // Read input states
-        INPUTS_Update();
+        // Read button states
+        BTN_Update();
         
         // Update tasks
         APP_Update();

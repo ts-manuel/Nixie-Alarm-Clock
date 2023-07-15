@@ -3,7 +3,7 @@
 #include "taskmanager.h"
 #include "task_args.h"
 #include "hardware/display.h"
-#include "input/input.h"
+#include "tasks/buttons.h"
 #include "settings.h"
 #include "alarm.h"
 #include "rtcc.h"
@@ -75,7 +75,7 @@ static void Update(void* arg)
     switch(state)
     {
         case e_TASK_SET_TIME_HOUR:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))        // Increment hours
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment hours
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_HOUR - Input: BTN_UP<SHORT_PRESS>\n");
                 if (currentTimeBCD.tm_hour < 0x23)
@@ -83,7 +83,7 @@ static void Update(void* arg)
                 else
                     currentTimeBCD.tm_hour = 0;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN)) // Decrement hours
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement hours
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_HOUR - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if (currentTimeBCD.tm_hour > 0)
@@ -91,7 +91,7 @@ static void Update(void* arg)
                 else
                     currentTimeBCD.tm_hour = 0x23;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_HOUR - Input: BTN_SET<SHORT_PRESS>\n");
                 nextState = e_TASK_SET_TIME_MIN;
@@ -99,7 +99,7 @@ static void Update(void* arg)
             break;
             
         case e_TASK_SET_TIME_MIN:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))        // Increment minutes
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment minutes
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_MIN - Input: BTN_UP<SHORT_PRESS>\n");
                 if (currentTimeBCD.tm_min < 0x59)
@@ -108,7 +108,7 @@ static void Update(void* arg)
                     currentTimeBCD.tm_min = 0;
                 
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN)) // Decrement minutes
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement minutes
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_MIN - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if (currentTimeBCD.tm_min > 0)
@@ -116,7 +116,7 @@ static void Update(void* arg)
                 else
                     currentTimeBCD.tm_min = 0x59;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_MIN - Input: BTN_SET<SHORT_PRESS>\n");
                 nextState = e_TASK_SET_TIME_DAY;
@@ -124,19 +124,19 @@ static void Update(void* arg)
             break;
             
         case e_TASK_SET_TIME_DAY:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))        // Increment day
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment day
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_DAY - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((++ currentTimeBCD.tm_wday) > 7)
                     currentTimeBCD.tm_wday = 1;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN)) // Decrement day
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement day
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_DAY - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if ((-- currentTimeBCD.tm_wday) <= 0)
                     currentTimeBCD.tm_wday = 7;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: SetTime - State: SET_TIME_DAY - Input: BTN_SET<SHORT_PRESS>\n");
                 currentTimeBCD.tm_sec = 0;

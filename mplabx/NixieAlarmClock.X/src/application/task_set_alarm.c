@@ -3,7 +3,7 @@
 #include "taskmanager.h"
 #include "task_args.h"
 #include "hardware/display.h"
-#include "input/input.h"
+#include "tasks/buttons.h"
 #include "settings.h"
 #include "alarm.h"
 #include "rtcc.h"
@@ -47,19 +47,19 @@ static void Update(void* arg)
     switch(state)
     {
         case e_TASK_SET_ALARM_SLOT:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))        // Increment day
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment day
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_SLOT - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((++ activeAlarmSot) >= _AL_SLOT_COUNT)
                     activeAlarmSot = 0;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN)) // Decrement day
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement day
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_SLOT - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((-- activeAlarmSot) < 0)
                     activeAlarmSot = _AL_SLOT_COUNT - 1;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_SLOT - Input: BTN_SET<SHORT_PRESS>\n");
                 alarmSlot = settings->alarmSlots[activeAlarmSot];
@@ -68,19 +68,19 @@ static void Update(void* arg)
             break;
             
         case e_TASK_SET_ALARM_HOUR:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))        // Increment hours
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment hours
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_HOUR - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((++ alarmSlot.hour) >= 24)
                     alarmSlot.hour = 0;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN)) // Decrement hours
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement hours
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_HOUR - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if ((-- alarmSlot.hour) < 0)
                     alarmSlot.hour = 23;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_HOUR - Input: BTN_SET<SHORT_PRESS>\n");
                 nextState = e_TASK_SET_ALARM_MIN;
@@ -88,19 +88,19 @@ static void Update(void* arg)
             break;
             
         case e_TASK_SET_ALARM_MIN:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))        // Increment minutes
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment minutes
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_MIN - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((++ alarmSlot.min) >= 60)
                     alarmSlot.min = 0;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN)) // Decrement minutes
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement minutes
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_MIN - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if ((-- alarmSlot.min) < 0)
                     alarmSlot.min = 59;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_MIN - Input: BTN_SET<SHORT_PRESS>\n");
                 nextState = e_TASK_SET_ALARM_DAY;
@@ -108,17 +108,17 @@ static void Update(void* arg)
             break;
             
         case e_TASK_SET_ALARM_DAY:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))        // Increment day
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment day
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_DAY - Input: BTN_UP<SHORT_PRESS>\n");
                 alarmSlot.day |= 1 << activeDay;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN)) // Decrement day
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement day
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_DAY - Input: BTN_DOWN<SHORT_PRESS>\n");
                 alarmSlot.day &= ~(1 << activeDay);
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_DAY - Input: BTN_SET<SHORT_PRESS>\n");
                 if ((++ activeDay) >= 7)

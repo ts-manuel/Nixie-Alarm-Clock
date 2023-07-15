@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "input/input.h"
+#include "tasks/buttons.h"
 
 
 #define _APP_STACK_DEPTH    4

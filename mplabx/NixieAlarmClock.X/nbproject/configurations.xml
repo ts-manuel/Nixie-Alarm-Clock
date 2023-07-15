@@ -12,9 +12,6 @@
         <itemPath>src/hardware/display.h</itemPath>
         <itemPath>src/hardware/player.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="input" projectFiles="true">
-        <itemPath>src/input/input.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f4" displayName="logging" projectFiles="true">
         <itemPath>src/logging/logging.h</itemPath>
       </logicalFolder>
@@ -48,6 +45,9 @@
         <itemPath>mcc_generated_files/spi1_driver.h</itemPath>
         <itemPath>mcc_generated_files/spi1_types.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="tasks" projectFiles="true">
+        <itemPath>src/tasks/buttons.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f5" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.h</itemPath>
         <itemPath>src/time/millis.h</itemPath>
@@ -72,9 +72,6 @@
         <itemPath>src/hardware/PAM8407.c</itemPath>
         <itemPath>src/hardware/display.c</itemPath>
         <itemPath>src/hardware/player.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="input" projectFiles="true">
-        <itemPath>src/input/input.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="logging" projectFiles="true">
         <itemPath>src/logging/logging.c</itemPath>
@@ -111,6 +108,9 @@
         <itemPath>mcc_generated_files/tmr1.c</itemPath>
         <itemPath>mcc_generated_files/dma.c</itemPath>
         <itemPath>mcc_generated_files/spi1_driver.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="tasks" projectFiles="true">
+        <itemPath>src/tasks/buttons.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.c</itemPath>

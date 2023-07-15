@@ -3,7 +3,7 @@
 #include "taskmanager.h"
 #include "task_args.h"
 #include "hardware/display.h"
-#include "input/input.h"
+#include "tasks/buttons.h"
 #include "settings.h"
 #include "alarm.h"
 #include "rtcc.h"
@@ -48,19 +48,19 @@ static void Update(void* arg)
     switch (state)
     {
         case e_TASK_HOME_IDLE:
-            if (INPUT_LONG_PRESS(_IN_BTN_SET))
+            if (BTN_SET_GetState() == e_BTN_LONG_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: IDLE - Input: BTN_SET<LONG_PRESS>\n");
                 PLAYER_Stop();                      // Stop any songs playing
                 nextState = e_TASK_HOME_SET_ALARM;  // Change sate
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: IDLE - Input: BTN_SET<SHORT_PRESS>\n");
                 if (PLAYER_GetState() == e_PLAYER_BUSY)
                     PLAYER_Stop();
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_UP))
+            else if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: IDLE - Input: BTN_UP<SHORT_PRESS>\n");
                 if (PLAYER_GetState() == e_PLAYER_BUSY)
@@ -68,7 +68,7 @@ static void Update(void* arg)
                     settings->volume = PAM8407_VolumeUp();
                 }
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_DOWN))
+            else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: IDLE - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if (PLAYER_GetState() == e_PLAYER_BUSY)
@@ -76,7 +76,7 @@ static void Update(void* arg)
                     settings->volume = PAM8407_VolumeDown();
                 }
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_PLAY)) // Start playing a song or change song
+            else if (BTN_PLAY_GetState() == e_BTN_SHORT_PRESS) // Start playing a song or change song
             {
                 LOG_TRACE1("Task: Home - State: IDLE - Input: BTN_PLAY<SHORT_PRESS>\n");
                 if (PLAYER_GetState() == e_PLAYER_BUSY)
@@ -93,12 +93,12 @@ static void Update(void* arg)
             break;
             
         case e_TASK_HOME_SET_ALARM:
-            if (INPUT_SHORT_PRESS(_IN_BTN_UP))
+            if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: SET_ALARM - Input: BTN_UP<SHORT_PRESS>\n");
                 nextState = e_TASK_HOME_SET_TIME;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: SET_ALARM - Input: BTN_SET<SHORT_PRESS>\n");
                 APP_PushTask(&task_set_alarm, arg); // Set alarm
@@ -107,12 +107,12 @@ static void Update(void* arg)
             break;
             
         case e_TASK_HOME_SET_TIME:
-            if (INPUT_SHORT_PRESS(_IN_BTN_DOWN))
+            if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: SET_TIME - Input: BTN_DOWN<SHORT_PRESS>\n");
                 nextState = e_TASK_HOME_SET_ALARM;
             }
-            else if (INPUT_SHORT_PRESS(_IN_BTN_SET))
+            else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
                 LOG_TRACE1("Task: Home - State: SET_ALARM - Input: BTN_SET<SHORT_PRESS>\n");
                 APP_PushTask(&task_set_time, arg); // Set time
