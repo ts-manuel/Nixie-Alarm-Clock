@@ -1,6 +1,7 @@
 
 #include "display.h"
-#include "../delay.h"
+#include "time/delay.h"
+#include "time/millis.h"
 
 
 #define _TOGGLE_PERIOD_ms      1000
@@ -85,7 +86,7 @@ void DISPLAY_Update(void)
 {
     static uint32_t LastTogleMs = 0;
     //static uint8_t toggleValue = 0;
-    uint32_t millis = Millis();
+    uint32_t millis = TIME_Millis();
     uint8_t state[e_SEG_TGL_1 + 1];
     
     if (millis - LastTogleMs > _TOGGLE_PERIOD_ms)
@@ -211,7 +212,7 @@ static void ShiftData(uint8_t* data, uint8_t len)
 {
     O_DSP_LATCH_SetLow();
     O_DSP_CLK_SetLow();
-    __delay_us(_H_CLK_PER_us);
+    TIME_delay_us(_H_CLK_PER_us);
     
     for (int i = 0; i < len; i++)
     {
@@ -222,16 +223,16 @@ static void ShiftData(uint8_t* data, uint8_t len)
             else
                 O_DSP_DATA_SetLow();
             
-            __delay_us(_H_CLK_PER_us);
+            TIME_delay_us(_H_CLK_PER_us);
             O_DSP_CLK_SetHigh();
-            __delay_us(_H_CLK_PER_us);
+            TIME_delay_us(_H_CLK_PER_us);
             O_DSP_CLK_SetLow();
         }
     }
     
-    __delay_us(_H_CLK_PER_us);
+    TIME_delay_us(_H_CLK_PER_us);
     O_DSP_LATCH_SetHigh();
-    __delay_us(_H_CLK_PER_us);
+    TIME_delay_us(_H_CLK_PER_us);
     O_DSP_LATCH_SetLow();
     
     O_DSP_DATA_SetLow();

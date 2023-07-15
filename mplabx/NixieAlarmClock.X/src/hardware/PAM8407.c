@@ -2,7 +2,7 @@
 
 #include "PAM8407.h"
 #include "../settings.h"
-#include "../delay.h"
+#include "time/delay.h"
 #include "../../mcc_generated_files/system.h"
 #include "../../mcc_generated_files/pin_manager.h"
 #include "logging/logging.h"
@@ -43,9 +43,9 @@ uint8_t PAM8407_VolumeUp(void)
     //LOG_DEBUG_ARGS("PAM8407_VolumeUp() - Volume: %d\n", volume);
     
     O_PA_UP_SetLow();
-    __delay_ms(100);
+    TIME_delay_ms(100);
     O_PA_UP_SetHigh();
-    __delay_ms(100);
+    TIME_delay_ms(100);
     
     return volume;
 }
@@ -65,9 +65,9 @@ uint8_t PAM8407_VolumeDown(void)
     //LOG_DEBUG_ARGS("PAM8407_VolumeDown() - Volume: %d\n", volume);
     
     O_PA_DOWN_SetLow();
-    __delay_ms(100);
+    TIME_delay_ms(100);
     O_PA_DOWN_SetHigh();
-    __delay_ms(100);
+    TIME_delay_ms(100);
     
     return volume;
 }

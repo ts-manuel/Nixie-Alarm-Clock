@@ -45,23 +45,108 @@
 /**
   Section: Included Files
 */
-#include "mcc_generated_files/system.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "system.h"
+#include "rtcc.h"
+#include "tmr1.h"
+#include "time/millis.h"
+#include "time/delay.h"
+#include "input/input.h"
+#include "hardware/display.h"
+#include "hardware/player.h"
+#include "hardware/PAM8407.h"
+#include "hardware/PAM8407.h"
+#include "application/taskmanager.h"
+#include "application/task_args.h"
+#include "logging/logging.h"
+
+
+#define _FW_VER_MAJ 0
+#define _FW_VER_MIN 1
+
 
 /*
                          Main application
  */
 int main(void)
 {
+    Settings_t settings;
+    bcdTime_t bcd_time;
+    
     // initialize the device
     SYSTEM_Initialize();
+    
+    // set timer1 interrupt handler
+    TMR1_SetInterruptHandler(ISR_Timer1);
 
+    U1BRG = 0x174;  // Set UART1 to 9600 code-configurator doesn't support 7.168 MHz as clock frequency
+    
+    // Load settings
+    SETTINGS_Load(&settings);
+    
+    // Inputs initialization
+    INPUTS_Initialize();
+    
+    // Display init
+    DISPLAY_Initialize();
+    DISPLAY_SetPower(true);
+    
+    // Task manager initialization
+    APP_Initialize(&task_home, (void*)&settings);
+    
+    // Read clock
+    RTCC_BCDTimeGet(&bcd_time);
+    
+    TIME_delay_ms(500);
+    LOG_INFO("\n\n");
+    LOG_INFO("--------------------------------------\n");
+    LOG_INFO("COLD START FW Ver. %d.%d\n", _FW_VER_MAJ, _FW_VER_MIN);
+    LOG_INFO("Time: %d%d:%d%d Day: %d\n", bcd_time.tm_hour >> 4, bcd_time.tm_hour & 0x0f,
+            bcd_time.tm_min >> 4, bcd_time.tm_min & 0x0f, bcd_time.tm_wday);
+    LOG_INFO("\n");
+    LOG_INFO("Settings:\n");
+    LOG_INFO("  Volume: %d\n", settings.volume);
+    AlarmSlot_t* al;
+    for (uint8_t i = 0; i < _AL_SLOT_COUNT; i++)
+    {
+        al = &settings.alarmSlots[i];
+        LOG_INFO("  Alarm slot [%d] Time: %d%d:%d%d Day: %02X\n", i, al->hour >> 4, al->hour & 0x0f, al->min >> 4, al->min & 0x0f, al->day);
+    }
+    LOG_INFO("--------------------------------------\n");
+    
+    
     while (1)
     {
-        // Add your application code
+        static uint32_t lastMillis = 0;
+        uint32_t millis = TIME_Millis();
+        
+        // Heartbeat LED
+        if (millis - lastMillis > 500)
+        {
+            lastMillis = millis;
+            O_LED_Toggle();
+        }
+        
+        // Read input states
+        INPUTS_Update();
+        
+        // Update tasks
+        APP_Update();
+        
+        // Update display
+        DISPLAY_Update();
     }
 
     return 1;
 }
+
+
+
+
+
+
 /**
  End of File
 */

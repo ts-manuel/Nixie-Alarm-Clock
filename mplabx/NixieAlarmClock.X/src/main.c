@@ -50,7 +50,9 @@
 #include <stdbool.h>
 #include "system.h"
 #include "rtcc.h"
-#include "delay.h"
+#include "tmr1.h"
+#include "time/millis.h"
+#include "time/delay.h"
 #include "input/input.h"
 #include "hardware/display.h"
 #include "hardware/player.h"
@@ -75,8 +77,10 @@ int main(void)
     
     // initialize the device
     SYSTEM_Initialize();
-    MillisInitialize();
     
+    // set timer1 interrupt handler
+    TMR1_SetInterruptHandler(ISR_Timer1);
+
     U1BRG = 0x174;  // Set UART1 to 9600 code-configurator doesn't support 7.168 MHz as clock frequency
     
     // Load settings
@@ -95,7 +99,7 @@ int main(void)
     // Read clock
     RTCC_BCDTimeGet(&bcd_time);
     
-    __delay_ms(500);
+    TIME_delay_ms(500);
     LOG_INFO("\n\n");
     LOG_INFO("--------------------------------------\n");
     LOG_INFO("COLD START FW Ver. %d.%d\n", _FW_VER_MAJ, _FW_VER_MIN);
@@ -116,7 +120,7 @@ int main(void)
     while (1)
     {
         static uint32_t lastMillis = 0;
-        uint32_t millis = Millis();
+        uint32_t millis = TIME_Millis();
         
         // Heartbeat LED
         if (millis - lastMillis > 500)

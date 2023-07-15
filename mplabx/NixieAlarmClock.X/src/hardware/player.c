@@ -4,7 +4,7 @@
 #include "../../mcc_generated_files/dma.h"
 #include "../../mcc_generated_files/fatfs/ff.h"
 #include "player.h"
-#include "../delay.h"
+#include "time/delay.h"
 #include "PAM8407.h"
 #include "../hardware/PAM8407.h"
 #include "../../mcc_generated_files/sd_spi/sd_spi.h"
@@ -160,7 +160,7 @@ static FRESULT MountSD(FATFS* drive)
     FRESULT res;
     
     O_SD_PWR_EN_SetHigh();
-    __delay_ms(500);
+    TIME_delay_ms(500);
     
     if( SD_SPI_IsMediaPresent() == false)
     {

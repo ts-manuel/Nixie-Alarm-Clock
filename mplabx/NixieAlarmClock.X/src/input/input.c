@@ -3,7 +3,8 @@
 #include "input.h"
 #include "system.h"
 #include "pin_manager.h"
-#include "delay.h"
+#include "time/delay.h"
+#include "time/millis.h"
 
 #include "logging/logging.h"
 
@@ -61,7 +62,7 @@ void INPUTS_Initialize()
  */
 void INPUTS_Update()
 {
-    uint32_t now = Millis();
+    uint32_t now = TIME_Millis();
     
     // Read the state of all inputs
     ReadInputs(inputs);

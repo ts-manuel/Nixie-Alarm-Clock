@@ -52,17 +52,17 @@
 #include <stdbool.h>
 
 #include "clc1.h"
-#include "tmr1.h"
-#include "spi1_driver.h"
-#include "dma.h"
-#include "interrupt_manager.h"
-#include "traps.h"
-#include "drivers/spi_master.h"
-#include "uart1.h"
 #include "rtcc.h"
 #include "fatfs/ff.h"
 #include "sd_spi/sd_spi.h"
+#include "tmr1.h"
+#include "dma.h"
+#include "interrupt_manager.h"
+#include "traps.h"
 #include "spi2.h"
+#include "drivers/spi_master.h"
+#include "spi1_driver.h"
+#include "uart1.h"
 
 #warning "This file will be removed in future MCC releases. Use system.h instead."
 

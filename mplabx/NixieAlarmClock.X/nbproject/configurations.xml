@@ -48,7 +48,10 @@
         <itemPath>mcc_generated_files/spi1_driver.h</itemPath>
         <itemPath>mcc_generated_files/spi1_types.h</itemPath>
       </logicalFolder>
-      <itemPath>src/delay.h</itemPath>
+      <logicalFolder name="f5" displayName="time" projectFiles="true">
+        <itemPath>src/time/delay.h</itemPath>
+        <itemPath>src/time/millis.h</itemPath>
+      </logicalFolder>
       <itemPath>src/settings.h</itemPath>
       <itemPath>src/alarm.h</itemPath>
     </logicalFolder>
@@ -109,8 +112,11 @@
         <itemPath>mcc_generated_files/dma.c</itemPath>
         <itemPath>mcc_generated_files/spi1_driver.c</itemPath>
       </logicalFolder>
+      <logicalFolder name="f4" displayName="time" projectFiles="true">
+        <itemPath>src/time/delay.c</itemPath>
+        <itemPath>src/time/millis.c</itemPath>
+      </logicalFolder>
       <itemPath>src/main.c</itemPath>
-      <itemPath>src/delay.c</itemPath>
       <itemPath>src/settings.c</itemPath>
       <itemPath>src/alarm.c</itemPath>
     </logicalFolder>
