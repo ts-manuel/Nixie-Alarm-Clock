@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "config.h"
 #include "buttons.h"
 #include "system.h"
 #include "pin_manager.h"
@@ -20,8 +21,6 @@ typedef struct
     bool        active;
     BtnState_t  state;              // Current input state
     uint32_t    activationTimeMs;
-    uint32_t    shortPressMs;       // Time in ms after witch to register a short press
-    uint32_t    longPressMs;        // Time in ms after witch to register a long press
 } Button_t;
 
 
@@ -50,26 +49,18 @@ void BTN_Initialize()
     buttons[_IN_BTN_SET].active = false;
     buttons[_IN_BTN_SET].state = e_BTN_IDLE;
     buttons[_IN_BTN_SET].activationTimeMs = 0;
-    buttons[_IN_BTN_SET].shortPressMs = 100;
-    buttons[_IN_BTN_SET].longPressMs = 2000;
 
     buttons[_IN_BTN_UP].active = false;
     buttons[_IN_BTN_UP].state = e_BTN_IDLE;
     buttons[_IN_BTN_UP].activationTimeMs = 0;
-    buttons[_IN_BTN_UP].shortPressMs = 100;
-    buttons[_IN_BTN_UP].longPressMs = 2000;
     
     buttons[_IN_BTN_DOWN].active = false;
     buttons[_IN_BTN_DOWN].state = e_BTN_IDLE;
     buttons[_IN_BTN_DOWN].activationTimeMs = 0;
-    buttons[_IN_BTN_DOWN].shortPressMs = 100;
-    buttons[_IN_BTN_DOWN].longPressMs = 2000;
     
     buttons[_IN_BTN_PLAY].active = false;
     buttons[_IN_BTN_PLAY].state = e_BTN_IDLE;
     buttons[_IN_BTN_PLAY].activationTimeMs = 0;
-    buttons[_IN_BTN_PLAY].shortPressMs = 100;
-    buttons[_IN_BTN_PLAY].longPressMs = 2000;
 }
 
 
@@ -101,7 +92,7 @@ void BTN_Update()
             case e_BTN_ACTIVE:
                 if (!st->active)
                     st->state = e_BTN_IDLE;
-                else if (now - st->activationTimeMs >= st->shortPressMs)
+                else if (now - st->activationTimeMs >= _BUTTONS_SHORT_PRESS_MS)
                     st->state = e_BTN_SHORT_PRESS;
                 break;
                 
@@ -115,7 +106,7 @@ void BTN_Update()
             case e_BTN_SHORT_HOLD:
                 if (!st->active)
                     st->state = e_BTN_IDLE;
-                else if (now - st->activationTimeMs >= st->longPressMs)
+                else if (now - st->activationTimeMs >= _BUTTONS_LONG_PRESS_MS)
                     st->state = e_BTN_LONG_PRESS;
                 break;
         
