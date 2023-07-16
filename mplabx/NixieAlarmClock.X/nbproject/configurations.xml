@@ -116,9 +116,9 @@
         <itemPath>src/views/view_set_alarm.c</itemPath>
         <itemPath>src/views/view_set_time.c</itemPath>
       </logicalFolder>
-      <itemPath>src/main.c</itemPath>
       <itemPath>src/settings.c</itemPath>
       <itemPath>src/global.c</itemPath>
+      <itemPath>main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
