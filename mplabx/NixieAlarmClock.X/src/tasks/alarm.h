@@ -5,8 +5,8 @@
  * Compares current time with all set alarms and sets flag if triggered
  */
 
-#ifndef ALARM_H
-#define	ALARM_H
+#ifndef _TASKS_ALARM_H_
+#define	_TASKS_ALARM_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -25,5 +25,5 @@ extern bool flagTriggerAlarm;
 
 void ALARM_Update(void);
 
-#endif	/* ALARM_H */
+#endif	/* _TASKS_ALARM_H_ */
 

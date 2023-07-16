@@ -13,8 +13,8 @@
  *  LONG_HOLD:      input is active for > longPressMs
  */
 
-#ifndef _TASKS_INPUTS_H_
-#define	_TASKS_INPUTS_H_
+#ifndef _TASKS_BUTTONS_H_
+#define	_TASKS_BUTTONS_H_
 
 typedef enum
 {
@@ -49,5 +49,5 @@ BtnState_t BTN_PLAY_GetState(void);
 
 
 
-#endif	/* _TASKS_INPUTS_H_ */
+#endif	/* _TASKS_BUTTONS_H_ */
 
