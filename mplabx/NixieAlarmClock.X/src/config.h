@@ -16,5 +16,8 @@
 #define _BUTTONS_SHORT_PRESS_MS     100     // Time required to trigger a short press
 #define _BUTTONS_LONG_PRESS_MS      2000    // Time required to trigger a long press
 
+// Number of available alarm slots
+#define _ALARM_SLOT_COUNT  4   // This is fixed by the number of ligts on the fromt panel
+
 #endif	/* _CONFIG_H_ */
 

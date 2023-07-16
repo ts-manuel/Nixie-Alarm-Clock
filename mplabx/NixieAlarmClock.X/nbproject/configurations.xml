@@ -44,6 +44,7 @@
       <logicalFolder name="f2" displayName="tasks" projectFiles="true">
         <itemPath>src/tasks/buttons.h</itemPath>
         <itemPath>src/tasks/display.h</itemPath>
+        <itemPath>src/tasks/alarm.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.h</itemPath>
@@ -53,7 +54,6 @@
         <itemPath>src/views/views.h</itemPath>
       </logicalFolder>
       <itemPath>src/settings.h</itemPath>
-      <itemPath>src/alarm.h</itemPath>
       <itemPath>src/config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -106,6 +106,7 @@
       <logicalFolder name="f2" displayName="tasks" projectFiles="true">
         <itemPath>src/tasks/buttons.c</itemPath>
         <itemPath>src/tasks/display.c</itemPath>
+        <itemPath>src/tasks/alarm.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.c</itemPath>
@@ -119,7 +120,6 @@
       </logicalFolder>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/settings.c</itemPath>
-      <itemPath>src/alarm.c</itemPath>
       <itemPath>src/global.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"

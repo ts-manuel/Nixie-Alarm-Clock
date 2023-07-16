@@ -13,10 +13,10 @@ void SETTINGS_Load(Settings_t* settings)
 {
     settings->volume = 30;
     
-    memset(settings->alarmSlots, 0, sizeof(AlarmSlot_t) * 4);
-    settings->alarmSlots[0].day   = 0b00000001;
-    settings->alarmSlots[0].hour  = 0x06;
-    settings->alarmSlots[0].min   = 0x22;
+    memset(alarmSlots, 0, sizeof(AlarmSlot_t) * 4);
+    alarmSlots[0].day   = 0b00000001;
+    alarmSlots[0].hour  = 0x06;
+    alarmSlots[0].min   = 0x22;
 }
 
 

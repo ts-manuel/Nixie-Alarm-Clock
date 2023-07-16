@@ -1,7 +1,7 @@
 #include "views.h"
 #include "tasks/display.h"
 #include "tasks/buttons.h"
-#include "alarm.h"
+#include "tasks/alarm.h"
 #include "rtcc.h"
 #include "hardware/player.h"
 #include "logging/logging.h"
@@ -41,17 +41,17 @@ View_t SetAlarmUpdate(void)
         case e_VIEW_SET_ALARM_SLOT:
             if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment day
             {
-                if ((++ activeAlarmSot) >= _AL_SLOT_COUNT)
+                if ((++ activeAlarmSot) >= _ALARM_SLOT_COUNT)
                     activeAlarmSot = 0;
             }
             else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement day
             {
                 if ((-- activeAlarmSot) < 0)
-                    activeAlarmSot = _AL_SLOT_COUNT - 1;
+                    activeAlarmSot = _ALARM_SLOT_COUNT - 1;
             }
             else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
-                //alarmSlot = settings->alarmSlots[activeAlarmSot];
+                alarmSlot = alarmSlots[activeAlarmSot];
                 nextState = e_VIEW_SET_ALARM_HOUR;
             }
             break;
@@ -104,8 +104,7 @@ View_t SetAlarmUpdate(void)
                 if ((++ activeDay) >= 7)
                 {
                     // Save changes made to the alarm slot and exit task
-                    //settings->alarmSlots[activeAlarmSot] = alarmSlot;
-                    
+                    alarmSlots[activeAlarmSot] = alarmSlot;
                     return e_VIEW_HOME;
                 }
             }

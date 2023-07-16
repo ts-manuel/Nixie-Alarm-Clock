@@ -10,13 +10,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "alarm.h"
+#include "tasks/alarm.h"
 
 
 typedef struct
 {
     uint8_t     volume;                     // Amplifier volume (0 to 32)
-    AlarmSlot_t alarmSlots[_AL_SLOT_COUNT]; // Alarm slots
 } Settings_t;
 
 

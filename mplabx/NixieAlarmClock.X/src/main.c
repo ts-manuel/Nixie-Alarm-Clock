@@ -56,6 +56,7 @@
 #include "time/delay.h"
 #include "tasks/display.h"
 #include "tasks/buttons.h"
+#include "tasks/alarm.h"
 #include "views/views.h"
 #include "hardware/player.h"
 #include "hardware/PAM8407.h"
@@ -107,9 +108,9 @@ int main(void)
     LOG_INFO("Settings:\n");
     LOG_INFO("  Volume: %d\n", settings.volume);
     AlarmSlot_t* al;
-    for (uint8_t i = 0; i < _AL_SLOT_COUNT; i++)
+    for (uint8_t i = 0; i < _ALARM_SLOT_COUNT; i++)
     {
-        al = &settings.alarmSlots[i];
+        al = &alarmSlots[i];
         LOG_INFO("  Alarm slot [%d] Time: %d%d:%d%d Day: %02X\n", i, al->hour >> 4, al->hour & 0x0f, al->min >> 4, al->min & 0x0f, al->day);
     }
     LOG_INFO("--------------------------------------\n");
@@ -127,14 +128,13 @@ int main(void)
             O_LED_Toggle();
         }
         
-        // Read button states
+        // Update tasks
+        ALARM_Update();
         BTN_Update();
-        
-        // Update display views
-        VIEWS_Update();
-        
-        // Update display
         DISPLAY_Update();
+        
+        // Update views
+        VIEWS_Update();
     }
 
     return 1;

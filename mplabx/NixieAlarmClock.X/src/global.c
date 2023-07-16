@@ -6,6 +6,11 @@
  * information between modules
  */
 
+#include "config.h"
 #include "tasks/display.h"
+#include "tasks/alarm.h"
 
 DispBuffer_t display;
+
+AlarmSlot_t alarmSlots[_ALARM_SLOT_COUNT];
+bool flagTriggerAlarm;

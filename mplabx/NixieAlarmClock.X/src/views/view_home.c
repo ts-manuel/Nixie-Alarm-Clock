@@ -1,7 +1,7 @@
 #include "views.h"
 #include "tasks/display.h"
 #include "tasks/buttons.h"
-#include "alarm.h"
+#include "tasks/alarm.h"
 #include "rtcc.h"
 #include "hardware/player.h"
 #include "logging/logging.h"
@@ -27,11 +27,8 @@ View_t HomeUpdate(void)
     bcdTime_t bcd_time;
     
     // Read time from RTC
-    RTCC_BCDTimeGet(&bcd_time);
-    
-    // Check alarm
-    // TODO: Move alarm check in a task and set a flag when it triggers
-    bool ringAlarm = false;//ALARM_Check(&bcd_time, settings->alarmSlots);
+    if (RTCC_BCDTimeGet(&bcd_time) == false)
+        return e_VIEW_HOME;
     
     // Handle inputs
     switch (state)
@@ -68,10 +65,13 @@ View_t HomeUpdate(void)
 
                 //PLAYER_Play(settings->volume);
             }
-            else if (ringAlarm)  // Start playing a song if not already
+            else if (flagTriggerAlarm)  // Start playing a song if not already
             {
                 /*if (PLAYER_GetState() == e_PLAYER_IDLE)
                     PLAYER_Play(settings->volume);*/
+                
+                // Clear alarm trigger flag
+                flagTriggerAlarm = false;
             }
             break;
             
@@ -116,10 +116,10 @@ View_t HomeUpdate(void)
     display.NEON_SA = (bcd_time.tm_wday == 6) ? e_SEG_ON : e_SEG_OFF;
     display.NEON_SU = (bcd_time.tm_wday == 7) ? e_SEG_ON : e_SEG_OFF;
 
-    //display.NEON_AL1 = (settings->alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
-    //display.NEON_AL2 = (settings->alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
-    //display.NEON_AL3 = (settings->alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
-    //display.NEON_AL4 = (settings->alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
+    display.NEON_AL1 = (alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
+    display.NEON_AL2 = (alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
+    display.NEON_AL3 = (alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
+    display.NEON_AL4 = (alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
     display.NEON_SET = (state != e_VIEW_HOME_IDLE)       ? e_SEG_ON : e_SEG_OFF;
     display.NEON_ALM = (state == e_VIEW_HOME_SET_ALARM)  ? e_SEG_TGL : e_SEG_OFF;
     display.NEON_TME = (state == e_VIEW_HOME_SET_TIME)   ? e_SEG_TGL : e_SEG_OFF;

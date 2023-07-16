@@ -1,7 +1,7 @@
 #include "views.h"
 #include "tasks/display.h"
 #include "tasks/buttons.h"
-#include "alarm.h"
+#include "tasks/alarm.h"
 #include "rtcc.h"
 #include "hardware/player.h"
 #include "logging/logging.h"
@@ -156,10 +156,10 @@ View_t SetTimeUpdate(void)
             display.NEON_SA = (currentTimeBCD.tm_wday == 6) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_SU = (currentTimeBCD.tm_wday == 7) ? e_SEG_ON : e_SEG_OFF;
 
-            //display.NEON_AL1 = (settings->alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL2 = (settings->alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL3 = (settings->alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL4 = (settings->alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL1 = (alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL2 = (alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL3 = (alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL4 = (alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_SET = e_SEG_ON;
             display.NEON_ALM = e_SEG_OFF;
             display.NEON_TME = e_SEG_ON;
@@ -184,10 +184,10 @@ View_t SetTimeUpdate(void)
             display.NEON_SA = (currentTimeBCD.tm_wday == 6) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_SU = (currentTimeBCD.tm_wday == 7) ? e_SEG_ON : e_SEG_OFF;
 
-            //display.NEON_AL1 = (settings->alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL2 = (settings->alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL3 = (settings->alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL4 = (settings->alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL1 = (alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL2 = (alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL3 = (alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL4 = (alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_SET = e_SEG_ON;
             display.NEON_ALM = e_SEG_OFF;
             display.NEON_TME = e_SEG_ON;
@@ -212,10 +212,10 @@ View_t SetTimeUpdate(void)
             display.NEON_SA = (currentTimeBCD.tm_wday == 6) ? e_SEG_TGL_1 : e_SEG_TGL_0;
             display.NEON_SU = (currentTimeBCD.tm_wday == 7) ? e_SEG_TGL_1 : e_SEG_TGL_0;
 
-            //display.NEON_AL1 = (settings->alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL2 = (settings->alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL3 = (settings->alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
-            //display.NEON_AL4 = (settings->alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL1 = (alarmSlots[0].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL2 = (alarmSlots[1].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL3 = (alarmSlots[2].day != 0) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_AL4 = (alarmSlots[3].day != 0) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_SET = e_SEG_ON;
             display.NEON_ALM = e_SEG_OFF;
             display.NEON_TME = e_SEG_ON;
