@@ -16,7 +16,7 @@
 #include "millis.h"
 
 
-static volatile uint32_t millis;
+static volatile uint32_t millis = 0;
 
 /*
  *  Timer 1 ISR fires every 1.0070801 ms

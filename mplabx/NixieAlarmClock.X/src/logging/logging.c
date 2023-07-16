@@ -5,10 +5,11 @@
  * Macros to log stuff with colors and different logging levels
  */
 
-//#include <time.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include "time/millis.h"
 #include "logging.h"
 
 #define ESC "\e"    // Linux esc
@@ -87,13 +88,17 @@ void logg_console(int level, const char* format, ...)
     va_list args;
     va_start(args, format);
     const char* color = "";
-    //time_t now;
-    //clock_t millis = (clock() / (CLOCKS_PER_SEC / 1000)) % 1000;
+    uint32_t millis = TIME_Millis();
+    uint16_t hour, min, sec;
     
-    // Get time
-    //time(&now);
-    //struct tm* p = localtime(&now);
-
+    // Convert milliseconds in hour minutes and seconds
+    sec = millis / 1000;
+    millis = millis - sec * 1000;
+    min = sec / 60;
+    sec = sec - min * 60;
+    hour = min / 60;
+    min = min - hour * 60;
+ 
 #if (_LOG_USE_COLORS == true)
     // Determine color
     switch (level)
@@ -107,12 +112,13 @@ void logg_console(int level, const char* format, ...)
         default:                color = _ERROR_COLOR;   break;
     }
 
-    //printf("%s[%02d:%02d:%02d.%03d]: ", color, p->tm_hour, p->tm_min, p->tm_sec, millis);
-    printf("%s: ", color);
+
+    printf("%s[%02d:%02d:%02d.%03ld]: ", color, hour, min, sec, millis);
     vprintf(format, args);
     printf("%s", RESET);
 #else
-    //printf("[%02d:%02d:%02d.%03d]: ", p->tm_hour, p->tm_min, p->tm_sec, millis);
+    printf("[%02d:%02d:%02d.%03ld]: ", hour, min, sec, millis);
+    
     vprintf(format, args);
 #endif
 
