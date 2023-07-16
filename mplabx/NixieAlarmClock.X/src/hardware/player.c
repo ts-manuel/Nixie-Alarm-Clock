@@ -90,7 +90,7 @@ void PLAYER_Play(uint8_t volume)
     f_read(&file, buffer, _BUFFER_SIZE * 2, NULL);
     
     // Enable amplifier
-    PAM8407_Enable(volume);
+    //PAM8407_Enable(volume);
     
     // Enable DAC
     O_DAC_MUTE_SetLow();

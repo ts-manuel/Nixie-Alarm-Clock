@@ -3,44 +3,30 @@
  * Author: ts-manuel
  * 
  * Volume settable in 32 steps.
- * When exiting the shutdown state the default volume is set to 12dB (step 9).
- * 1: +24        9 : +12      17: +0      25: -14
- * 2: +22.5      10: +10.36   18: -1.5    26: -16
- * 3: +21        11: +9       19: -3      27: -18
- * 4: +19.5      12: +7.5     20: -4.5    28: -20
- * 5: +18        13: +6       21: -6      29: -22
- * 6: +16.5      14: +4.5     22: -8      30: -24
- * 7: +15        15: +3       23: -10     31: -26
- * 8: +13.5      16: +1.5     24: -12     32: -80
+ * When exiting the shutdown state the default volume is set to 12dB (value 23).
+ * 31: +24        23: +12      15: +0      7: -14
+ * 30: +22.5      22: +10.36   14: -1.5    6: -16
+ * 29: +21        21: +9       13: -3      5: -18
+ * 28: +19.5      20: +7.5     12: -4.5    4: -20
+ * 27: +18        19: +6       11: -6      3: -22
+ * 26: +16.5      18: +4.5     10: -8      2: -24
+ * 25: +15        17: +3        9: -10     1: -26
+ * 24: +13.5      16: +1.5      8: -12     0: -80
  * 
- *
- * Created on December 3, 2022, 4:50 PM
  */
 
-#ifndef PAM8407_H
-#define	PAM8407_H
+#ifndef _HARDWARE_PAM8407_H_
+#define	_HARDWARE_PAM8407_H_
 
 #include <stdint.h>
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-   
-    void PAM8407_Enable(uint8_t volume);
-    
-    void PAM8407_Disable(void);
-    
-    uint8_t PAM8407_VolumeUp(void);
-    
-    uint8_t PAM8407_VolumeDown(void);
-    
-    uint8_t PAM8407_VolumeSet(uint8_t step);
-    
-    uint8_t PAM8407_VolumeGet(void);
+void PAM8407_Enable(void);
 
-#ifdef	__cplusplus
-}
-#endif
+void PAM8407_Disable(void);
 
-#endif	/* PAM8407_H */
+void PAM8407_SetVolume(int8_t vol);
+
+uint8_t PAM8407_GetVolume(void);
+
+#endif	/* _HARDWARE_PAM8407_H_ */
 

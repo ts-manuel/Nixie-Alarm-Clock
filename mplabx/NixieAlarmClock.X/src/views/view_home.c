@@ -46,6 +46,9 @@ View_t HomeUpdate(void)
                 {
                     settings->volume = PAM8407_VolumeUp();
                 }*/
+                
+                int8_t volume = PAM8407_GetVolume();
+                PAM8407_SetVolume(volume + 1);
             }
             else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS)
             {
@@ -53,6 +56,9 @@ View_t HomeUpdate(void)
                 {
                     settings->volume = PAM8407_VolumeDown();
                 }*/
+                
+                int8_t volume = PAM8407_GetVolume();
+                PAM8407_SetVolume(volume - 1);
             }
             else if (BTN_PLAY_GetState() == e_BTN_SHORT_PRESS) // Start playing a song or change song
             {

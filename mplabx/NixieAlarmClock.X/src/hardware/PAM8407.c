@@ -1,53 +1,101 @@
+/* 
+ * File:   PAM8407.h
+ * Author: ts-manuel
+ * 
+ * Volume settable in 32 steps.
+ * When exiting the shutdown state the default volume is set to 12dB (value 23).
+ * 31: +24        23: +12      15: +0      7: -14
+ * 30: +22.5      22: +10.36   14: -1.5    6: -16
+ * 29: +21        21: +9       13: -3      5: -18
+ * 28: +19.5      20: +7.5     12: -4.5    4: -20
+ * 27: +18        19: +6       11: -6      3: -22
+ * 26: +16.5      18: +4.5     10: -8      2: -24
+ * 25: +15        17: +3        9: -10     1: -26
+ * 24: +13.5      16: +1.5      8: -12     0: -80
+ * 
+ */
 
-
+#include <stdint.h>
+#include <stdbool.h>
 #include "PAM8407.h"
-#include "../settings.h"
 #include "time/delay.h"
-#include "../../mcc_generated_files/system.h"
-#include "../../mcc_generated_files/pin_manager.h"
-#include "logging/logging.h"
+#include "system.h"
+#include "pin_manager.h"
+
+#define _PAM8407_VOM_PULSE_MS   100
+
+static void VolumeUp(void);
+static void VolumeDown(void);
+
+static bool enabled = false;
+static uint8_t volume = 23;
 
 
-static uint8_t attStep = 9;
-
-
-void PAM8407_Enable(uint8_t volume)
+void PAM8407_Enable(void)
 {
     // Enable amplifier
+    O_PA_SHUTDOWN_SetLow();
+    TIME_delay_us(1);
     O_PA_SHUTDOWN_SetHigh();
     
     // Set internal state to default value
-    attStep = 9;
+    volume = 23;
     
-    PAM8407_VolumeSet(volume);
+    enabled = true;
 }
     
 
 void PAM8407_Disable(void)
 {
     O_PA_SHUTDOWN_SetLow();
+    
+    enabled = false;
 }
     
+
+/**
+ * Sets the desired volume level by repeatedly calling the UP DOWN functions 
+ * 
+ * @param vol   Desired volume, (0 = min to 31 = max)
+ */
+void PAM8407_SetVolume(int8_t vol)
+{
+    // Clamp input volume
+    vol = vol > 31 ? 31 : vol;
+    vol = vol <  0 ?  0 : vol;
+    
+    // Change volume
+    while(vol > volume)
+        VolumeDown();
+        
+    while(vol < volume)
+        VolumeUp();
+}
+
+
+/**
+ * Returns the volume setting
+ * 
+ * @return  Volume
+ */
+uint8_t PAM8407_GetVolume(void)
+{
+    return volume;
+}
+
 
 /**
  * Increases the amplifier volume by toggling the UP pin
  * and updates the internal state of the attenuator.
  */
-uint8_t PAM8407_VolumeUp(void)
+static void VolumeUp(void)
 {
-    uint8_t volume;
-    
-    attStep = attStep > 1 ? attStep - 1 : 1;
-    volume = attStep;
-    
-    //LOG_DEBUG_ARGS("PAM8407_VolumeUp() - Volume: %d\n", volume);
-    
     O_PA_UP_SetLow();
-    TIME_delay_ms(100);
+    TIME_delay_ms(_PAM8407_VOM_PULSE_MS);
     O_PA_UP_SetHigh();
-    TIME_delay_ms(100);
+    TIME_delay_ms(_PAM8407_VOM_PULSE_MS);
     
-    return volume;
+    volume ++;
 }
     
 
@@ -55,52 +103,12 @@ uint8_t PAM8407_VolumeUp(void)
  * Decreases the amplifier volume by toggling the DOWN pin
  * and updates the internal state of the attenuator.
  */
-uint8_t PAM8407_VolumeDown(void)
+static void VolumeDown(void)
 {
-    uint8_t volume;
-    
-    attStep = attStep < 32 ? attStep + 1 : 32;
-    volume = attStep;
-    
-    //LOG_DEBUG_ARGS("PAM8407_VolumeDown() - Volume: %d\n", volume);
-    
     O_PA_DOWN_SetLow();
-    TIME_delay_ms(100);
+    TIME_delay_ms(_PAM8407_VOM_PULSE_MS);
     O_PA_DOWN_SetHigh();
-    TIME_delay_ms(100);
+    TIME_delay_ms(_PAM8407_VOM_PULSE_MS);
     
-    return volume;
-}
-
-
-/**
- * Sets the desired volume level by repeatedly calling the UP DOWN functions 
- * 
- * @param step  Desired volume, (1 = max to 32 = min)
- */
-uint8_t PAM8407_VolumeSet(uint8_t step)
-{
-    uint8_t volume;
-    
-    step = step > 32 ? 32 : step;
-    step = step <  1 ?  1 : step;
-    
-    while(step > attStep)
-        volume = PAM8407_VolumeDown();
-        
-    while(step < attStep)
-        volume = PAM8407_VolumeUp();
-    
-    return volume;
-}
-
-
-/**
- * Returns the internal state of the attenuator
- * 
- * @return  Attenuator value
- */
-uint8_t PAM8407_VolumeGet(void)
-{
-    return attStep;
+    volume --;
 }
