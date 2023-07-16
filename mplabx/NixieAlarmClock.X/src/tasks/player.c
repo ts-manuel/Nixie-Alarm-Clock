@@ -127,7 +127,6 @@ void PLAYER_Update(void)
 static void Play(void)
 {
     FRESULT res;
-    uint16_t wavCount;
     char fname[FF_SFN_BUF + 1];
     
     // Try mounting the SD card
@@ -309,12 +308,18 @@ static void FindRandomWAVName(char* fname)
     FRESULT res;
     uint16_t wavCount;
     uint16_t index;
+    static uint16_t lastIndex = 0;
     
     // Find number of WAV files
     wavCount = GetWavFileCount();
     
-    // Compute random index
-    index = rand() % wavCount;
+    // Compute random index different from the previous
+    do
+    {
+        index = rand() % wavCount;
+    }
+    while (index == lastIndex);
+    lastIndex  = index;
     
     fname[0] = '\0';
     
