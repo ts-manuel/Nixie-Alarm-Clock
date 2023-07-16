@@ -89,7 +89,7 @@ void logg_console(int level, const char* format, ...)
     va_start(args, format);
     const char* color = "";
     uint32_t millis = TIME_Millis();
-    uint16_t hour, min, sec;
+    uint32_t hour, min, sec;
     
     // Convert milliseconds in hour minutes and seconds
     sec = millis / 1000;
@@ -113,11 +113,11 @@ void logg_console(int level, const char* format, ...)
     }
 
 
-    printf("%s[%02d:%02d:%02d.%03ld]: ", color, hour, min, sec, millis);
+    printf("%s[%02ld:%02ld:%02ld.%03ld]: ", color, hour, min, sec, millis);
     vprintf(format, args);
     printf("%s", RESET);
 #else
-    printf("[%02d:%02d:%02d.%03ld]: ", hour, min, sec, millis);
+    printf("[%02ld:%02ld:%02ld.%03ld]: ", hour, min, sec, millis);
     
     vprintf(format, args);
 #endif
