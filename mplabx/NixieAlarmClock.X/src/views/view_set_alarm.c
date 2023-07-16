@@ -2,6 +2,7 @@
 #include "tasks/display.h"
 #include "tasks/buttons.h"
 #include "tasks/alarm.h"
+#include "tasks/time.h"
 #include "rtcc.h"
 #include "hardware/player.h"
 #include "logging/logging.h"
@@ -30,11 +31,7 @@ void SetAlarmInit(void)
 View_t SetAlarmUpdate(void)
 {
     ViewSetAlarmState_t nextState = state;
-    bcdTime_t bcd_time;
-    
-    // Read time from RTC
-    RTCC_BCDTimeGet(&bcd_time);
-    
+
     // Handle inputs
     switch(state)
     {
@@ -124,13 +121,13 @@ View_t SetAlarmUpdate(void)
     switch(state)
     {
         case e_VIEW_SET_ALARM_SLOT:
-            display.NEON_MO = (bcd_time.tm_wday == 1) ? e_SEG_ON : e_SEG_OFF;
-            display.NEON_TU = (bcd_time.tm_wday == 2) ? e_SEG_ON : e_SEG_OFF;
-            display.NEON_WE = (bcd_time.tm_wday == 3) ? e_SEG_ON : e_SEG_OFF;
-            display.NEON_TH = (bcd_time.tm_wday == 4) ? e_SEG_ON : e_SEG_OFF;
-            display.NEON_FR = (bcd_time.tm_wday == 5) ? e_SEG_ON : e_SEG_OFF;
-            display.NEON_SA = (bcd_time.tm_wday == 6) ? e_SEG_ON : e_SEG_OFF;
-            display.NEON_SU = (bcd_time.tm_wday == 7) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_MO = (rtcTime.tm_wday == 1) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_TU = (rtcTime.tm_wday == 2) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_WE = (rtcTime.tm_wday == 3) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_TH = (rtcTime.tm_wday == 4) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_FR = (rtcTime.tm_wday == 5) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_SA = (rtcTime.tm_wday == 6) ? e_SEG_ON : e_SEG_OFF;
+            display.NEON_SU = (rtcTime.tm_wday == 7) ? e_SEG_ON : e_SEG_OFF;
 
             display.NEON_AL1 = (activeAlarmSot == 0) ? e_SEG_TGL : e_SEG_OFF;
             display.NEON_AL2 = (activeAlarmSot == 1) ? e_SEG_TGL : e_SEG_OFF;
@@ -145,10 +142,10 @@ View_t SetAlarmUpdate(void)
             display.NIXIE_2 = e_SEG_ON;
             display.NIXIE_3 = e_SEG_ON;
             display.NIXIE_4 = e_SEG_ON;
-            display.NIXIE_VAL_1 = bcd_time.tm_hour >> 4;
-            display.NIXIE_VAL_2 = bcd_time.tm_hour & 0x0f;
-            display.NIXIE_VAL_3 = bcd_time.tm_min >> 4;
-            display.NIXIE_VAL_4 = bcd_time.tm_min & 0x0f;
+            display.NIXIE_VAL_1 = rtcTime.tm_hour >> 4;
+            display.NIXIE_VAL_2 = rtcTime.tm_hour & 0x0f;
+            display.NIXIE_VAL_3 = rtcTime.tm_min >> 4;
+            display.NIXIE_VAL_4 = rtcTime.tm_min & 0x0f;
             break;
             
         case e_VIEW_SET_ALARM_HOUR:

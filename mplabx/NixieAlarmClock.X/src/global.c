@@ -6,6 +6,7 @@
  * information between modules
  */
 
+#include "rtcc.h"
 #include "config.h"
 #include "tasks/display.h"
 #include "tasks/alarm.h"
@@ -14,3 +15,5 @@ DispBuffer_t display;
 
 AlarmSlot_t alarmSlots[_ALARM_SLOT_COUNT];
 bool flagTriggerAlarm;
+
+bcdTime_t rtcTime;

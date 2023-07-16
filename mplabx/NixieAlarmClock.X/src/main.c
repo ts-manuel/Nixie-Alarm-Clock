@@ -57,6 +57,7 @@
 #include "tasks/display.h"
 #include "tasks/buttons.h"
 #include "tasks/alarm.h"
+#include "tasks/time.h"
 #include "views/views.h"
 #include "hardware/player.h"
 #include "hardware/PAM8407.h"
@@ -75,7 +76,6 @@
 int main(void)
 {
     Settings_t settings;
-    bcdTime_t bcd_time;
     
     // initialize the device
     SYSTEM_Initialize();
@@ -95,15 +95,15 @@ int main(void)
     // Load settings
     SETTINGS_Load(&settings);
 
-    // Read clock
-    RTCC_BCDTimeGet(&bcd_time);
-    
+    // Read RTC time
+    TIME_Update();
+
     
     LOG_INFO("\n\n");
     LOG_INFO("--------------------------------------\n");
     LOG_INFO("COLD START FW Ver. %d.%d\n", _FW_VER_MAJ, _FW_VER_MIN);
-    LOG_INFO("Time: %d%d:%d%d Day: %d\n", bcd_time.tm_hour >> 4, bcd_time.tm_hour & 0x0f,
-            bcd_time.tm_min >> 4, bcd_time.tm_min & 0x0f, bcd_time.tm_wday);
+    LOG_INFO("Time: %d%d:%d%d Day: %d\n", rtcTime.tm_hour >> 4, rtcTime.tm_hour & 0x0f,
+            rtcTime.tm_min >> 4, rtcTime.tm_min & 0x0f, rtcTime.tm_wday);
     LOG_INFO("\n");
     LOG_INFO("Settings:\n");
     LOG_INFO("  Volume: %d\n", settings.volume);
@@ -132,6 +132,7 @@ int main(void)
         ALARM_Update();
         BTN_Update();
         DISPLAY_Update();
+        TIME_Update();
         
         // Update views
         VIEWS_Update();

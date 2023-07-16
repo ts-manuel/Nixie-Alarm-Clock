@@ -45,6 +45,7 @@
         <itemPath>src/tasks/buttons.h</itemPath>
         <itemPath>src/tasks/display.h</itemPath>
         <itemPath>src/tasks/alarm.h</itemPath>
+        <itemPath>src/tasks/time.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.h</itemPath>
@@ -107,6 +108,7 @@
         <itemPath>src/tasks/buttons.c</itemPath>
         <itemPath>src/tasks/display.c</itemPath>
         <itemPath>src/tasks/alarm.c</itemPath>
+        <itemPath>src/tasks/time.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.c</itemPath>
