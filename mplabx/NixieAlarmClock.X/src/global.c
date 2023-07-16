@@ -10,6 +10,7 @@
 #include "config.h"
 #include "tasks/display.h"
 #include "tasks/alarm.h"
+#include "tasks/player.h"
 
 DispBuffer_t display;
 
@@ -17,3 +18,6 @@ AlarmSlot_t alarmSlots[_ALARM_SLOT_COUNT];
 bool flagTriggerAlarm;
 
 bcdTime_t rtcTime;
+
+PlayerCtrl_t playerCtrl;
+int8_t playerVolume;

@@ -28,7 +28,7 @@ static void VolumeUp(void);
 static void VolumeDown(void);
 
 static bool enabled = false;
-static uint8_t volume = 23;
+static int8_t volume = 23;
 
 
 void PAM8407_Enable(void)
@@ -65,10 +65,10 @@ void PAM8407_SetVolume(int8_t vol)
     vol = vol <  0 ?  0 : vol;
     
     // Change volume
-    while(vol > volume)
+    while(vol < volume)
         VolumeDown();
         
-    while(vol < volume)
+    while(vol > volume)
         VolumeUp();
 }
 

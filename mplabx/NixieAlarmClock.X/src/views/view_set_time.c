@@ -4,7 +4,6 @@
 #include "tasks/alarm.h"
 #include "tasks/time.h"
 #include "rtcc.h"
-#include "hardware/player.h"
 #include "logging/logging.h"
 #include "hardware/PAM8407.h"
 #include "tasks/time.h"

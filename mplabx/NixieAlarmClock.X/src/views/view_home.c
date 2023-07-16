@@ -3,9 +3,8 @@
 #include "tasks/buttons.h"
 #include "tasks/alarm.h"
 #include "tasks/time.h"
-#include "hardware/player.h"
+#include "tasks/player.h"
 #include "logging/logging.h"
-#include "hardware/PAM8407.h"
 
 
 typedef enum {e_VIEW_HOME_IDLE, e_VIEW_HOME_SET_ALARM, e_VIEW_HOME_SET_TIME} ViewHomeState_t;
@@ -25,52 +24,40 @@ View_t HomeUpdate(void)
 {
     ViewHomeState_t nextState = state;
 
-    
     // Handle inputs
     switch (state)
     {
         case e_VIEW_HOME_IDLE:
             if (BTN_SET_GetState() == e_BTN_LONG_PRESS)
             {
-                PLAYER_Stop();                      // Stop any songs playing
-                nextState = e_VIEW_HOME_SET_ALARM;  // Change sate
+                // Stop any songs playing
+                playerCtrl.cmd = e_PLAYER_CMD_STOP;
+                
+                // Change state
+                nextState = e_VIEW_HOME_SET_ALARM;
             }
             else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
-                if (PLAYER_GetState() == e_PLAYER_BUSY)
-                    PLAYER_Stop();
+                // Stop any songs playing
+                playerCtrl.cmd = e_PLAYER_CMD_STOP;
             }
             else if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)
             {
-                /*if (PLAYER_GetState() == e_PLAYER_BUSY)
-                {
-                    settings->volume = PAM8407_VolumeUp();
-                }*/
-                
-                int8_t volume = PAM8407_GetVolume();
-                PAM8407_SetVolume(volume + 1);
+                playerCtrl.cmd = e_PLAYER_CMD_VOLUME_UP;
             }
             else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS)
             {
-                /*if (PLAYER_GetState() == e_PLAYER_BUSY)
-                {
-                    settings->volume = PAM8407_VolumeDown();
-                }*/
-                
-                int8_t volume = PAM8407_GetVolume();
-                PAM8407_SetVolume(volume - 1);
+                playerCtrl.cmd = e_PLAYER_CMD_VOLUME_DOWN;
             }
             else if (BTN_PLAY_GetState() == e_BTN_SHORT_PRESS) // Start playing a song or change song
             {
-                if (PLAYER_GetState() == e_PLAYER_BUSY)
-                    PLAYER_Stop();
-
-                //PLAYER_Play(settings->volume);
+                // Send start command to player task
+                playerCtrl.cmd = e_PLAYER_CMD_PLAY;
             }
             else if (flagTriggerAlarm)  // Start playing a song if not already
             {
-                /*if (PLAYER_GetState() == e_PLAYER_IDLE)
-                    PLAYER_Play(settings->volume);*/
+                // Send start command to player task
+                playerCtrl.cmd = e_PLAYER_CMD_PLAY;
                 
                 // Clear alarm trigger flag
                 flagTriggerAlarm = false;

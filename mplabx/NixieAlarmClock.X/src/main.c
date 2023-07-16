@@ -58,9 +58,8 @@
 #include "tasks/buttons.h"
 #include "tasks/alarm.h"
 #include "tasks/time.h"
+#include "tasks/player.h"
 #include "views/views.h"
-#include "hardware/player.h"
-#include "hardware/PAM8407.h"
 #include "hardware/PAM8407.h"
 #include "logging/logging.h"
 #include "settings.h"
@@ -91,6 +90,7 @@ int main(void)
     VIEWS_Initialize();
     DISPLAY_Initialize();
     DISPLAY_SetPower(true);
+    PLAYER_Initialize();
     
     // Load settings
     SETTINGS_Load(&settings);
@@ -133,6 +133,7 @@ int main(void)
         BTN_Update();
         DISPLAY_Update();
         TIME_Update();
+        PLAYER_Update();
         
         // Update views
         VIEWS_Update();

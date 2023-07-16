@@ -1,21 +1,27 @@
-
-#include "../../mcc_generated_files/system.h"
-#include "../../mcc_generated_files/pin_manager.h"
-#include "../../mcc_generated_files/dma.h"
-#include "../../mcc_generated_files/fatfs/ff.h"
-#include "player.h"
-#include "time/delay.h"
-#include "PAM8407.h"
-#include "../hardware/PAM8407.h"
-#include "../../mcc_generated_files/sd_spi/sd_spi.h"
-#include "settings.h"
-#include "logging/logging.h"
+/* 
+ * File:   player.h
+ * Author: ts-manuel
+ *
+ * 
+ */
 
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include "system.h"
+#include "pin_manager.h"
+#include "dma.h"
+#include "sd_spi/sd_spi.h"
+#include "fatfs/ff.h"
+#include "hardware/PAM8407.h"
+#include "time/delay.h"
+#include "logging/logging.h"
+#include "settings.h"
+#include "player.h"
+
 
 #define _BUFFER_SIZE    512
+
 
 const char* frToStr[] = 
 {
@@ -41,22 +47,84 @@ const char* frToStr[] =
 	"FR_INVALID_PARAMETER"      /* (19) Given parameter is invalid */
 };
 
+const char* playerCmdStr[] =
+{
+    "NOP",
+    "PLAY",
+    "STOP",
+    "VOLUME_UP",
+    "VOLUME_DOWN"
+};
+
+
 static int16_t __attribute__ ((address(0x2000))) buffer[_BUFFER_SIZE];
 
-static eDAC_State_t playerState = e_PLAYER_IDLE;
 static FATFS    drive;
 static FIL      file;
 
+static void Play(void);
+static void Stop(void);
+static void VolumeUp(void);
+static void VolumeDown(void);
 static FRESULT MountSD(FATFS* drive);
 static void UnmountSD(void);
 static uint16_t GetWavFileCount(void);
 static void FindRandomWAVName(char* fname, uint16_t fcount);
 
 
+void PLAYER_Initialize(void)
+{
+    playerVolume = 11;
+    playerCtrl.cmd = e_PLAYER_CMD_NOP;
+    playerCtrl.state = e_PLAYER_IDLE;
+}
+
+
+void PLAYER_Update(void)
+{
+    e_PlayerState_t nextState = playerCtrl.state;
+    
+    if (playerCtrl.cmd == e_PLAYER_CMD_NOP)
+        return;
+    
+    LOG_TRACE1("PLAYER_Update(): Command = %s\n", playerCmdStr[playerCtrl.cmd]);
+    
+    switch (playerCtrl.cmd)
+    {
+        case e_PLAYER_CMD_PLAY:
+            if (playerCtrl.state == e_PLAYER_BUSY)
+                Stop();
+            Play();
+            nextState = e_PLAYER_BUSY;
+            break;
+            
+        case e_PLAYER_CMD_STOP:
+            if (playerCtrl.state == e_PLAYER_BUSY)
+                Stop();
+            nextState = e_PLAYER_IDLE;
+            break;
+            
+        case e_PLAYER_CMD_VOLUME_UP:
+            VolumeUp();
+            break;
+            
+        case e_PLAYER_CMD_VOLUME_DOWN:
+            VolumeDown();
+            break;
+            
+        default:
+            break;
+    }
+    
+    playerCtrl.cmd = e_PLAYER_CMD_NOP;
+    playerCtrl.state = nextState;
+}
+
+
 /**
  * Start playing a random song from the SD Card
  */
-void PLAYER_Play(uint8_t volume)
+static void Play(void)
 {
     FRESULT res;
     uint16_t wavCount;
@@ -65,7 +133,7 @@ void PLAYER_Play(uint8_t volume)
     // Try mounting the SD card
     if ((res = MountSD(&drive)) != FR_OK)
     {
-        printf("PLAYER_Play(): MountSD failed with code: %s\n", frToStr[res]);
+        LOG_ERROR("PLAYER Play(): MountSD() exit code: %s\n", frToStr[res]);
         return;
     }
     
@@ -75,11 +143,9 @@ void PLAYER_Play(uint8_t volume)
     // Find random file
     FindRandomWAVName(fname, wavCount);
     
-    //strcpy(fname, "TESTTONE.WAV");
-    
     if ((res = f_open(&file, fname, FA_READ)) != FR_OK)
     {
-        LOG_ERROR("Unable to find .WAV file\n");
+        LOG_ERROR("PLAYER Play(): f_open() exit code: %s\n", frToStr[res]);
         return;
     }
     
@@ -90,41 +156,52 @@ void PLAYER_Play(uint8_t volume)
     f_read(&file, buffer, _BUFFER_SIZE * 2, NULL);
     
     // Enable amplifier
-    //PAM8407_Enable(volume);
+    PAM8407_Enable();
+    PAM8407_SetVolume(playerVolume);
     
     // Enable DAC
     O_DAC_MUTE_SetLow();
     
     // Start DMA Transfer
+    DMA_ChannelEnable(DMA_CHANNEL_0);
     DMA_TransferCountSet(DMA_CHANNEL_0, _BUFFER_SIZE);
     DMA_SourceAddressSet(DMA_CHANNEL_0, (uint16_t)buffer);
     DMA_SoftwareTriggerEnable(DMA_CHANNEL_0);
-    
-    playerState = e_PLAYER_BUSY;
 }
 
 
 /**
  * Stop playback
  */
-void PLAYER_Stop(void)
+static void Stop(void)
 {
+    LOG_TRACE1("PLAYER Stop()\n");
+    
     // Disable power amplifier
     PAM8407_Disable();
     
     // Mute DAC
     O_DAC_MUTE_SetHigh();
     
+    // Power off SD card
     UnmountSD();
     
-    playerState = e_PLAYER_IDLE;
+    // Stop DMA channel from triggering interrupts
+    DMA_ChannelDisable(DMA_CHANNEL_0);
 }
 
 
-/* Get player state */
-eDAC_State_t PLAYER_GetState(void)
+static void VolumeUp(void)
 {
-    return playerState;
+    PAM8407_SetVolume(playerVolume + 1);
+    playerVolume = PAM8407_GetVolume();
+}
+
+
+static void VolumeDown(void)
+{
+    PAM8407_SetVolume(playerVolume - 1);
+    playerVolume = PAM8407_GetVolume();
 }
 
 
@@ -138,7 +215,7 @@ void DMA_Channel0_CallBack(void)
     UINT byte_read;
     DMAINT0bits.HALFIF = 0;
     
-    if (playerState == e_PLAYER_BUSY)
+    if (playerCtrl.state == e_PLAYER_BUSY)
     {
         f_read(&file, dest, _BUFFER_SIZE, &byte_read);
         
@@ -146,15 +223,12 @@ void DMA_Channel0_CallBack(void)
         {
             f_close(&file);
             
-            PLAYER_Stop();
+            playerCtrl.cmd = e_PLAYER_CMD_STOP;
         }
     }
 }
 
 
- /*
- 
-  */
 static FRESULT MountSD(FATFS* drive)
 {
     FRESULT res;
@@ -169,18 +243,23 @@ static FRESULT MountSD(FATFS* drive)
 
     if ((res = f_mount(drive,"0:",1)) != FR_OK)
     {
-        LOG_ERROR("MountSD - f_mount returned: %s\n", frToStr[res]);
+        LOG_ERROR("PLAYER MountSD(): f_mount() exit code: %s\n", frToStr[res]);
     }
     
     return res;
 }
 
 
+/*
+ 
+ */
 static void UnmountSD(void)
 {
-    //O_SD_PWR_EN_SetLow();
-    
+    // Unmount from file system
     f_mount(0,"0:",0);
+    
+    // Remove power
+    O_SD_PWR_EN_SetLow();
 }
 
 
@@ -196,25 +275,25 @@ static uint16_t GetWavFileCount(void)
     
     if ((res =  f_findfirst(&dir, &fno, "", "*.WAV")) != FR_OK)
     {
-        LOG_ERROR("GetWavFileCount - f_findfirst returned: %s\n", frToStr[res]);
+        LOG_ERROR("PLAYER GetWavFileCount() - f_findfirst exit code: %s\n", frToStr[res]);
         return 0;
     }
 
-    LOG_TRACE1("Searching for .WAV files:\n");
+    LOG_TRACE1("PLAYER GetWavFileCount(): Searching for .WAV files:\n");
     
     while (res == FR_OK && fno.fname[0]) {         // Repeat while an item is found
-        LOG_TRACE2("   %s\n", fno.fname);
+        LOG_TRACE0("   %s\n", fno.fname);
         fileCount ++;
         res = f_findnext(&dir, &fno);               /* Search for next item */
     }
 
     if ((res = f_closedir(&dir)) != FR_OK)
     {
-        LOG_ERROR("GetWavFileCount - f_closedir returned: %s\n", frToStr[res]);
+        LOG_ERROR("PLAYER GetWavFileCount() - f_closedir exit code: %s\n", frToStr[res]);
         return 0;
     }
 
-    LOG_TRACE2("Found %d files\n", fileCount);
+    LOG_TRACE1("PLAYER GetWavFileCount(): Found %d files\n", fileCount);
     
     return fileCount;
 }
@@ -233,22 +312,22 @@ static void FindRandomWAVName(char* fname, uint16_t fcount)
     FRESULT res;
     int index = rand() % fcount;
     
-    fname[0] = "\0";
+    fname[0] = '\0';
     
     if ((res =  f_findfirst(&dir, &fno, "", "*.WAV")) != FR_OK)
     {
-        LOG_ERROR("FindRandomWAVName - f_findfirst returned: %s\n", frToStr[res]);
+        LOG_ERROR("PLAYER FindRandomWAVName() - f_findfirst exit code: %s\n", frToStr[res]);
         return;
     }
     
-    for (uint16_t i = 0; i < index; i++)
+    /*for (uint16_t i = 0; i < index; i++)
     {
         if ((res = f_findnext(&dir, &fno)) != FR_OK)
         {
-            LOG_ERROR("FindRandomWAVName - f_closedir returned: %s\n", frToStr[res]);
+            LOG_ERROR("PLAYER FindRandomWAVName() - f_closedir exit code: %s\n", frToStr[res]);
             return;
         }
-    }
+    }*/
     
     strcpy(fname, fno.fname);
 }
