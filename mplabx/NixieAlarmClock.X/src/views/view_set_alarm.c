@@ -1,148 +1,130 @@
-
-
-#include "taskmanager.h"
-#include "task_args.h"
+#include "views.h"
 #include "tasks/display.h"
 #include "tasks/buttons.h"
-#include "settings.h"
 #include "alarm.h"
 #include "rtcc.h"
 #include "hardware/player.h"
 #include "logging/logging.h"
+#include "hardware/PAM8407.h"
 
 
-
-static void Initialize(void*);
-static void Update(void*);
-
-Task_t task_set_alarm = {false, Initialize, Update};
-
-typedef enum {e_TASK_SET_ALARM_SLOT, e_TASK_SET_ALARM_HOUR, e_TASK_SET_ALARM_MIN, e_TASK_SET_ALARM_DAY} TaskSetAlarmState_t;
-static TaskSetAlarmState_t state;
+typedef enum {e_VIEW_SET_ALARM_SLOT, e_VIEW_SET_ALARM_HOUR, e_VIEW_SET_ALARM_MIN, e_VIEW_SET_ALARM_DAY} ViewSetAlarmState_t;
+const char* viewSetAlarmStateStr[] = {"VIEW_SET_ALARM_SLOT", "VIEW_SET_ALARM_HOUR", "VIEW_SET_ALARM_MIN", "VIEW_SET_ALARM_DAY"};
+static ViewSetAlarmState_t state;
 
 static int8_t activeAlarmSot;
 static int8_t activeDay;
 static AlarmSlot_t alarmSlot;
 
 
-static void Initialize(void* arg)
+void SetAlarmInit(void)
 {
     activeAlarmSot = 0;
     activeDay = 0;
-    state = e_TASK_SET_ALARM_SLOT;
+    state = e_VIEW_SET_ALARM_SLOT;
+    
+    LOG_TRACE1("View Init: SetAlarm - State: %s\n", viewSetAlarmStateStr[state]);
 }
 
 
-
-static void Update(void* arg)
+View_t SetAlarmUpdate(void)
 {
-    Settings_t* settings = (Settings_t*)arg;
-    TaskSetAlarmState_t nextState = state;
+    ViewSetAlarmState_t nextState = state;
     bcdTime_t bcd_time;
     
+    // Read time from RTC
     RTCC_BCDTimeGet(&bcd_time);
-    
     
     // Handle inputs
     switch(state)
     {
-        case e_TASK_SET_ALARM_SLOT:
+        case e_VIEW_SET_ALARM_SLOT:
             if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment day
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_SLOT - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((++ activeAlarmSot) >= _AL_SLOT_COUNT)
                     activeAlarmSot = 0;
             }
             else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement day
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_SLOT - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((-- activeAlarmSot) < 0)
                     activeAlarmSot = _AL_SLOT_COUNT - 1;
             }
             else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_SLOT - Input: BTN_SET<SHORT_PRESS>\n");
-                alarmSlot = settings->alarmSlots[activeAlarmSot];
-                nextState = e_TASK_SET_ALARM_HOUR;
+                //alarmSlot = settings->alarmSlots[activeAlarmSot];
+                nextState = e_VIEW_SET_ALARM_HOUR;
             }
             break;
             
-        case e_TASK_SET_ALARM_HOUR:
+        case e_VIEW_SET_ALARM_HOUR:
             if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment hours
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_HOUR - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((++ alarmSlot.hour) >= 24)
                     alarmSlot.hour = 0;
             }
             else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement hours
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_HOUR - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if ((-- alarmSlot.hour) < 0)
                     alarmSlot.hour = 23;
             }
             else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_HOUR - Input: BTN_SET<SHORT_PRESS>\n");
-                nextState = e_TASK_SET_ALARM_MIN;
+                nextState = e_VIEW_SET_ALARM_MIN;
             }
             break;
             
-        case e_TASK_SET_ALARM_MIN:
+        case e_VIEW_SET_ALARM_MIN:
             if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment minutes
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_MIN - Input: BTN_UP<SHORT_PRESS>\n");
                 if ((++ alarmSlot.min) >= 60)
                     alarmSlot.min = 0;
             }
             else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement minutes
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_MIN - Input: BTN_DOWN<SHORT_PRESS>\n");
                 if ((-- alarmSlot.min) < 0)
                     alarmSlot.min = 59;
             }
             else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_MIN - Input: BTN_SET<SHORT_PRESS>\n");
-                nextState = e_TASK_SET_ALARM_DAY;
+                nextState = e_VIEW_SET_ALARM_DAY;
             }
             break;
             
-        case e_TASK_SET_ALARM_DAY:
+        case e_VIEW_SET_ALARM_DAY:
             if (BTN_UP_GetState() == e_BTN_SHORT_PRESS)        // Increment day
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_DAY - Input: BTN_UP<SHORT_PRESS>\n");
                 alarmSlot.day |= 1 << activeDay;
             }
             else if (BTN_DOWN_GetState() == e_BTN_SHORT_PRESS) // Decrement day
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_DAY - Input: BTN_DOWN<SHORT_PRESS>\n");
                 alarmSlot.day &= ~(1 << activeDay);
             }
             else if (BTN_SET_GetState() == e_BTN_SHORT_PRESS)
             {
-                LOG_TRACE1("Task: SetAlarm - State: SET_ALARM_DAY - Input: BTN_SET<SHORT_PRESS>\n");
                 if ((++ activeDay) >= 7)
                 {
                     // Save changes made to the alarm slot and exit task
-                    settings->alarmSlots[activeAlarmSot] = alarmSlot;
+                    //settings->alarmSlots[activeAlarmSot] = alarmSlot;
                     
-                    APP_PopTask();
+                    return e_VIEW_HOME;
                 }
             }
             break;
             
         default:
-            nextState = e_TASK_SET_ALARM_SLOT;
+            nextState = e_VIEW_SET_ALARM_SLOT;
     }
+    
+    if (state != nextState)
+        LOG_TRACE1("View Update: SetAlarm - State: %s\n", viewSetAlarmStateStr[nextState]);
     
     state = nextState;
     
     
- 
     // Update screen
     switch(state)
     {
-        case e_TASK_SET_ALARM_SLOT:
+        case e_VIEW_SET_ALARM_SLOT:
             display.NEON_MO = (bcd_time.tm_wday == 1) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_TU = (bcd_time.tm_wday == 2) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_WE = (bcd_time.tm_wday == 3) ? e_SEG_ON : e_SEG_OFF;
@@ -170,7 +152,7 @@ static void Update(void* arg)
             display.NIXIE_VAL_4 = bcd_time.tm_min & 0x0f;
             break;
             
-        case e_TASK_SET_ALARM_HOUR:
+        case e_VIEW_SET_ALARM_HOUR:
             display.NEON_MO = (alarmSlot.day & (1 << 0)) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_TU = (alarmSlot.day & (1 << 1)) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_WE = (alarmSlot.day & (1 << 2)) ? e_SEG_ON : e_SEG_OFF;
@@ -198,7 +180,7 @@ static void Update(void* arg)
             display.NIXIE_VAL_4 = alarmSlot.min % 10;
             break;
             
-        case e_TASK_SET_ALARM_MIN:
+        case e_VIEW_SET_ALARM_MIN:
             display.NEON_MO = (alarmSlot.day & (1 << 0)) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_TU = (alarmSlot.day & (1 << 1)) ? e_SEG_ON : e_SEG_OFF;
             display.NEON_WE = (alarmSlot.day & (1 << 2)) ? e_SEG_ON : e_SEG_OFF;
@@ -226,7 +208,7 @@ static void Update(void* arg)
             display.NIXIE_VAL_4 = alarmSlot.min % 10;
             break;
             
-        case e_TASK_SET_ALARM_DAY:
+        case e_VIEW_SET_ALARM_DAY:
             display.NEON_MO = (activeDay == 0) ? ((alarmSlot.day & (1 << 0)) ? e_SEG_TGL_1 : e_SEG_TGL_0) : ((alarmSlot.day & (1 << 0)) ? e_SEG_ON : e_SEG_OFF);
             display.NEON_TU = (activeDay == 1) ? ((alarmSlot.day & (1 << 1)) ? e_SEG_TGL_1 : e_SEG_TGL_0) : ((alarmSlot.day & (1 << 1)) ? e_SEG_ON : e_SEG_OFF);
             display.NEON_WE = (activeDay == 2) ? ((alarmSlot.day & (1 << 2)) ? e_SEG_TGL_1 : e_SEG_TGL_0) : ((alarmSlot.day & (1 << 2)) ? e_SEG_ON : e_SEG_OFF);
@@ -254,4 +236,6 @@ static void Update(void* arg)
             display.NIXIE_VAL_4 = alarmSlot.min % 10;
             break;
     }
+    
+    return e_VIEW_SET_ALARM;
 }

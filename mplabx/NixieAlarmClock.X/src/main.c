@@ -56,12 +56,12 @@
 #include "time/delay.h"
 #include "tasks/display.h"
 #include "tasks/buttons.h"
+#include "views/views.h"
 #include "hardware/player.h"
 #include "hardware/PAM8407.h"
 #include "hardware/PAM8407.h"
-#include "application/taskmanager.h"
-#include "application/task_args.h"
 #include "logging/logging.h"
+#include "settings.h"
 
 
 #define _FW_VER_MAJ 0
@@ -79,28 +79,25 @@ int main(void)
     // initialize the device
     SYSTEM_Initialize();
     
-    // set timer1 interrupt handler
+    // Set UART1 to 9600 code-configurator doesn't support 7.168 MHz as clock frequency
+    U1BRG = 0x174;
+    TIME_delay_ms(1);
+    printf("\n\n");
+    
     TMR1_SetInterruptHandler(ISR_Timer1);
-
-    U1BRG = 0x174;  // Set UART1 to 9600 code-configurator doesn't support 7.168 MHz as clock frequency
     
-    // Load settings
-    SETTINGS_Load(&settings);
-    
-    // Initialize buttons task
     BTN_Initialize();
-    
-    // Display init
+    VIEWS_Initialize();
     DISPLAY_Initialize();
     DISPLAY_SetPower(true);
     
-    // Task manager initialization
-    APP_Initialize(&task_home, (void*)&settings);
-    
+    // Load settings
+    SETTINGS_Load(&settings);
+
     // Read clock
     RTCC_BCDTimeGet(&bcd_time);
     
-    TIME_delay_ms(500);
+    
     LOG_INFO("\n\n");
     LOG_INFO("--------------------------------------\n");
     LOG_INFO("COLD START FW Ver. %d.%d\n", _FW_VER_MAJ, _FW_VER_MIN);
@@ -133,8 +130,8 @@ int main(void)
         // Read button states
         BTN_Update();
         
-        // Update tasks
-        APP_Update();
+        // Update display views
+        VIEWS_Update();
         
         // Update display
         DISPLAY_Update();

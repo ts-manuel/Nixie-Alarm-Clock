@@ -4,9 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f3" displayName="application" projectFiles="true">
-        <itemPath>src/application/taskmanager.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="hardware" projectFiles="true">
         <itemPath>src/hardware/PAM8407.h</itemPath>
         <itemPath>src/hardware/player.h</itemPath>
@@ -52,6 +49,9 @@
         <itemPath>src/time/delay.h</itemPath>
         <itemPath>src/time/millis.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f6" displayName="views" projectFiles="true">
+        <itemPath>src/views/views.h</itemPath>
+      </logicalFolder>
       <itemPath>src/settings.h</itemPath>
       <itemPath>src/alarm.h</itemPath>
       <itemPath>src/config.h</itemPath>
@@ -63,12 +63,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f3" displayName="application" projectFiles="true">
-        <itemPath>src/application/taskmanager.c</itemPath>
-        <itemPath>src/application/task_home.c</itemPath>
-        <itemPath>src/application/task_set_alarm.c</itemPath>
-        <itemPath>src/application/task_set_time.c</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="hardware" projectFiles="true">
         <itemPath>src/hardware/PAM8407.c</itemPath>
         <itemPath>src/hardware/player.c</itemPath>
@@ -116,6 +110,12 @@
       <logicalFolder name="f4" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.c</itemPath>
         <itemPath>src/time/millis.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="views" projectFiles="true">
+        <itemPath>src/views/views.c</itemPath>
+        <itemPath>src/views/view_home.c</itemPath>
+        <itemPath>src/views/view_set_alarm.c</itemPath>
+        <itemPath>src/views/view_set_time.c</itemPath>
       </logicalFolder>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/settings.c</itemPath>

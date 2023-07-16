@@ -43,37 +43,37 @@ void logg_console(int level, const char* format, ...);
 #if _LOG_LEVEL <= _LOGLV_TRACE0
 #define LOG_TRACE0(msg, ...) logg_console(_LOGLV_TRACE0, msg, ##__VA_ARGS__)
 #else
-#define LOG_TRACE0(x)
+#define LOG_TRACE0(x) do {} while(0)
 #endif
 
 #if _LOG_LEVEL <= _LOGLV_TRACE1
 #define LOG_TRACE1(msg, ...) logg_console(_LOGLV_TRACE1, msg, ##__VA_ARGS__)
 #else
-#define LOG_TRACE1(x)
+#define LOG_TRACE1(x) do {} while(0)
 #endif
 
 #if _LOG_LEVEL <= _LOGLV_TRACE2
 #define LOG_TRACE2(msg, ...) logg_console(_LOGLV_TRACE2, msg, ##__VA_ARGS__)
 #else
-#define LOG_TRACE2(x)
+#define LOG_TRACE2(x) do {} while(0)
 #endif
 
 #if _LOG_LEVEL <= _LOGLV_INFO
 #define LOG_INFO(msg, ...) logg_console(_LOGLV_INFO, msg, ##__VA_ARGS__)
 #else
-#define LOG_INFO(x)
+#define LOG_INFO(x) do {} while(0)
 #endif
 
 #if _LOG_LEVEL <= _LOGLV_WARNING
 #define LOG_WARNING(msg, ...) logg_console(_LOGLV_WARNING, msg, ##__VA_ARGS__)
 #else
-#define LOG_ERROR(x)
+#define LOG_ERROR(x) do {} while(0)
 #endif
 
 #if _LOG_LEVEL <= _LOGLV_ERROR
 #define LOG_ERROR(msg, ...) logg_console(_LOGLV_ERROR, msg, ##__VA_ARGS__)
 #else
-#define LOG_ERROR(x)
+#define LOG_ERROR(x) do {} while(0)
 #endif
 
 #endif	/* LOGGING_H */
