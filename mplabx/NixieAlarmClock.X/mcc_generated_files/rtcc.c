@@ -80,6 +80,13 @@ void RTCC_Initialize(void)
        TIMEH = 0x1617;    // hours/minutes
        TIMEL = 0x4000;    // seconds
    }
+   // set 2022-09-29 11-10-40
+   ALMDATEH = 0x2209;    // Year/Month
+   ALMDATEL = 0x701;    // Date/Wday
+   ALMTIMEH = 0x1110;    // hours/minutes
+   ALMTIMEL = 0x4000;    // seconds
+   // AMASK Every Second; ALMRPT 0; CHIME disabled; ALRMEN enabled; 
+   RTCCON1H = 0x8100;
 
    // PWCPS 1:1; PS 1:1; CLKSEL SOSC; FDIV 0; 
    RTCCON2L = 0x00;

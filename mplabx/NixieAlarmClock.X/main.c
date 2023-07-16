@@ -60,9 +60,9 @@
 #include "tasks/alarm.h"
 #include "tasks/time.h"
 #include "tasks/player.h"
+#include "tasks/settings.h"
 #include "views/views.h"
 #include "hardware/PAM8407.h"
-#include "settings.h"
 
 
 #define _FW_VER_MAJ 0
@@ -74,25 +74,22 @@
  */
 int main(void)
 {
-    Settings_t settings;
-    
     // initialize the device
     SYSTEM_Initialize();
     
     // Set UART1 to 9600 code-configurator doesn't support 7.168 MHz as clock frequency
-    U1BRG = 0x174;
+    //U1BRG = 0x174;
+    U1BRG = 186;
     TIME_delay_ms(1);
     printf("\n\n");
     
+    SETTINGS_Initialize();
     BTN_Initialize();
     VIEWS_Initialize();
     DISPLAY_Initialize();
     DISPLAY_SetPower(true);
     PLAYER_Initialize();
     
-    // Load settings
-    SETTINGS_Load(&settings);
-
     // Read RTC time
     TIME_Update();
 
@@ -104,7 +101,7 @@ int main(void)
             rtcTime.tm_min >> 4, rtcTime.tm_min & 0x0f, rtcTime.tm_wday);
     LOG_INFO("\n");
     LOG_INFO("Settings:\n");
-    LOG_INFO("  Volume: %d\n", settings.volume);
+    LOG_INFO("  Volume: %d\n", playerVolume);
     AlarmSlot_t* al;
     for (uint8_t i = 0; i < _ALARM_SLOT_COUNT; i++)
     {
@@ -132,6 +129,7 @@ int main(void)
         DISPLAY_Update();
         TIME_Update();
         PLAYER_Update();
+        SETTINGS_Update();
         
         // Update views
         VIEWS_Update();

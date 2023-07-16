@@ -106,17 +106,17 @@ void PIN_MANAGER_Initialize (void)
      ***************************************************************************/
     __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
 
-    RPOR2bits.RP5R = 0x0007;    //RB5->SPI1:SDO1
-    RPOR6bits.RP13R = 0x001C;    //RB13->INTERNAL OSCILLATOR:REFO
-    RPOR10bits.RP21R = 0x0008;    //RC5->SPI1:SCK1OUT
-    RPINR20bits.SDI1R = 0x0014;    //RC4->SPI1:SDI1
     RPOR5bits.RP10R = 0x000C;    //RB10->SPI2:SS2OUT
-    RPINR25bits.CLCINBR = 0x0008;    //RB8->CLC1:CLCINB
     RPINR25bits.CLCINAR = 0x0009;    //RB9->CLC1:CLCINA
-    RPOR5bits.RP11R = 0x000B;    //RB11->SPI2:SCK2OUT
+    RPOR10bits.RP21R = 0x0008;    //RC5->SPI1:SCK1OUT
     RPOR7bits.RP15R = 0x0003;    //RB15->UART1:U1TX
-    RPOR6bits.RP12R = 0x000A;    //RB12->SPI2:SDO2
     RPINR18bits.U1RXR = 0x000E;    //RB14->UART1:U1RX
+    RPINR25bits.CLCINBR = 0x0008;    //RB8->CLC1:CLCINB
+    RPOR6bits.RP12R = 0x000A;    //RB12->SPI2:SDO2
+    RPINR20bits.SDI1R = 0x0014;    //RC4->SPI1:SDI1
+    RPOR5bits.RP11R = 0x000B;    //RB11->SPI2:SCK2OUT
+    RPOR6bits.RP13R = 0x001C;    //RB13->INTERNAL OSCILLATOR:REFO
+    RPOR2bits.RP5R = 0x0007;    //RB5->SPI1:SDO1
 
     __builtin_write_OSCCONL(OSCCON | 0x40); // lock PPS
     

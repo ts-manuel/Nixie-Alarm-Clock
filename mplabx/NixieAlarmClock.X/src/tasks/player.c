@@ -74,7 +74,6 @@ static void FindRandomWAVName(char* fname);
 
 void PLAYER_Initialize(void)
 {
-    playerVolume = 11;
     playerCtrl.cmd = e_PLAYER_CMD_NOP;
     playerCtrl.state = e_PLAYER_IDLE;
 }

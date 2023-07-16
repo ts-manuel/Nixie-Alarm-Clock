@@ -19,6 +19,9 @@
           <itemPath>mcc_generated_files/fatfs/ffconf.h</itemPath>
           <itemPath>mcc_generated_files/fatfs/integer.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="memory" displayName="memory" projectFiles="true">
+          <itemPath>mcc_generated_files/memory/flash.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="sd_spi" displayName="sd_spi" projectFiles="true">
           <itemPath>mcc_generated_files/sd_spi/sd_spi.h</itemPath>
         </logicalFolder>
@@ -43,6 +46,8 @@
         <itemPath>src/tasks/alarm.h</itemPath>
         <itemPath>src/tasks/time.h</itemPath>
         <itemPath>src/tasks/player.h</itemPath>
+        <itemPath>src/tasks/settings.c</itemPath>
+        <itemPath>src/tasks/settings.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="utils" projectFiles="true">
         <itemPath>src/utils/delay.h</itemPath>
@@ -52,7 +57,6 @@
       <logicalFolder name="f6" displayName="views" projectFiles="true">
         <itemPath>src/views/views.h</itemPath>
       </logicalFolder>
-      <itemPath>src/settings.h</itemPath>
       <itemPath>src/config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -80,6 +84,9 @@
           <itemPath>mcc_generated_files/fatfs/ffunicode.c</itemPath>
           <itemPath>mcc_generated_files/fatfs/diskio.c</itemPath>
           <itemPath>mcc_generated_files/fatfs/ff.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="memory" displayName="memory" projectFiles="true">
+          <itemPath>mcc_generated_files/memory/flash.s</itemPath>
         </logicalFolder>
         <logicalFolder name="sd_spi" displayName="sd_spi" projectFiles="true">
           <itemPath>mcc_generated_files/sd_spi/sd_spi.c</itemPath>
@@ -116,7 +123,6 @@
         <itemPath>src/views/view_set_alarm.c</itemPath>
         <itemPath>src/views/view_set_time.c</itemPath>
       </logicalFolder>
-      <itemPath>src/settings.c</itemPath>
       <itemPath>src/global.c</itemPath>
       <itemPath>main.c</itemPath>
     </logicalFolder>
@@ -144,7 +150,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC24F-GA-GB_DFP" vendor="Microchip" version="1.5.181"/>
+        <pack name="PIC24F-GA-GB_DFP" vendor="Microchip" version="1.8.217"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -177,7 +183,7 @@
         <property key="cast-align" value="false"/>
         <property key="code-model" value="default"/>
         <property key="const-model" value="default"/>
-        <property key="data-model" value="default"/>
+        <property key="data-model" value="small-data"/>
         <property key="disable-instruction-scheduling" value="false"/>
         <property key="enable-all-warnings" value="true"/>
         <property key="enable-ansi-std" value="false"/>
@@ -207,7 +213,7 @@
         <property key="oXC16gcc-sfr-warn" value="false"/>
         <property key="oXC16gcc-smar-io-lvl" value="1"/>
         <property key="oXC16gcc-smart-io-fmt" value=""/>
-        <property key="optimization-level" value="0"/>
+        <property key="optimization-level" value="1"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
@@ -355,7 +361,10 @@
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
         <property key="debugoptions.simultaneous.debug" value="false"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="event.recorder.enabled" value="false"/>
+        <property key="event.recorder.scvd.files" value=""/>
         <property key="freeze.timers" value="false"/>
+        <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
         <property key="memories.configurationmemory" value="true"/>
@@ -454,7 +463,10 @@
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
         <property key="debugoptions.simultaneous.debug" value="false"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="event.recorder.enabled" value="false"/>
+        <property key="event.recorder.scvd.files" value=""/>
         <property key="freeze.timers" value="false"/>
+        <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
         <property key="memories.configurationmemory" value="true"/>

@@ -17,7 +17,10 @@
 #define _BUTTONS_LONG_PRESS_MS      2000    // Time required to trigger a long press
 
 // Number of available alarm slots
-#define _ALARM_SLOT_COUNT  4   // This is fixed by the number of ligts on the fromt panel
+#define _ALARM_SLOT_COUNT           4       // This is fixed by the number of ligts on the fromt panel
+
+// Time interval at witch to check for modified settings
+#define _SETTINGS_CHECK_INTERVAL_MS 10000
 
 #endif	/* _CONFIG_H_ */
 

@@ -97,18 +97,19 @@
 #include "pin_manager.h"
 #include "clock.h"
 #include "system.h"
-#include "clc1.h"
-#include "rtcc.h"
-#include "fatfs/ff.h"
+#include "drivers/spi_master.h"
 #include "sd_spi/sd_spi.h"
+#include "uart1.h"
+#include "clc1.h"
 #include "tmr1.h"
+#include "spi1_driver.h"
 #include "dma.h"
+#include "spi2.h"
+#include "rtcc.h"
+#include "memory/flash.h"
+#include "fatfs/ff.h"
 #include "interrupt_manager.h"
 #include "traps.h"
-#include "spi2.h"
-#include "drivers/spi_master.h"
-#include "spi1_driver.h"
-#include "uart1.h"
 
 void SYSTEM_Initialize(void)
 {
@@ -118,9 +119,9 @@ void SYSTEM_Initialize(void)
     CLC1_Initialize();
     SPI2_Initialize();
     UART1_Initialize();
-    RTCC_Initialize();
     TMR1_Initialize();
     DMA_Initialize();
+    RTCC_Initialize();
 }
 
 /**
