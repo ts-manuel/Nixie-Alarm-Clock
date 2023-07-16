@@ -52,8 +52,9 @@
 #include "rtcc.h"
 #include "tmr1.h"
 #include "pin_manager.h"
-#include "time/millis.h"
-#include "time/delay.h"
+#include "utils/millis.h"
+#include "utils/delay.h"
+#include "utils/logging.h"
 #include "tasks/display.h"
 #include "tasks/buttons.h"
 #include "tasks/alarm.h"
@@ -61,7 +62,6 @@
 #include "tasks/player.h"
 #include "views/views.h"
 #include "hardware/PAM8407.h"
-#include "logging/logging.h"
 #include "settings.h"
 
 

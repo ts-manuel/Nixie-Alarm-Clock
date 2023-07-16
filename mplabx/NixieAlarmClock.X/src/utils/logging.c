@@ -9,7 +9,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "time/millis.h"
+#include "utils/millis.h"
 #include "logging.h"
 
 #define ESC "\e"    // Linux esc

@@ -4,7 +4,7 @@
 #include "tasks/alarm.h"
 #include "tasks/time.h"
 #include "tasks/player.h"
-#include "logging/logging.h"
+#include "utils/logging.h"
 
 
 typedef enum {e_VIEW_HOME_IDLE, e_VIEW_HOME_SET_ALARM, e_VIEW_HOME_SET_TIME} ViewHomeState_t;

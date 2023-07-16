@@ -6,7 +6,7 @@
 #include "buttons.h"
 #include "system.h"
 #include "pin_manager.h"
-#include "time/millis.h"
+#include "utils/millis.h"
 
 
 #define _IN_BTN_SET     0

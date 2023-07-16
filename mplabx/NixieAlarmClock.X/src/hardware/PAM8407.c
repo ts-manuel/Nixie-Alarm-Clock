@@ -17,10 +17,10 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "PAM8407.h"
-#include "time/delay.h"
 #include "system.h"
 #include "pin_manager.h"
+#include "utils/delay.h"
+#include "PAM8407.h"
 
 #define _PAM8407_VOM_PULSE_MS   100
 

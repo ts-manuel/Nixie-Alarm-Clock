@@ -8,8 +8,8 @@
 #include "system.h"
 #include "pin_manager.h"
 #include "config.h"
-#include "time/delay.h"
-#include "time/millis.h"
+#include "utils/delay.h"
+#include "utils/millis.h"
 #include "display.h"
 
 

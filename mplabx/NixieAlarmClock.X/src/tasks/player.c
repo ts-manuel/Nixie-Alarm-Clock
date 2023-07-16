@@ -14,8 +14,8 @@
 #include "sd_spi/sd_spi.h"
 #include "fatfs/ff.h"
 #include "hardware/PAM8407.h"
-#include "time/delay.h"
-#include "logging/logging.h"
+#include "utils/delay.h"
+#include "utils/logging.h"
 #include "settings.h"
 #include "player.h"
 

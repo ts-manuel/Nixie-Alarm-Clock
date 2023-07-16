@@ -7,7 +7,7 @@
 
 #include "rtcc.h"
 #include "alarm.h"
-#include "logging/logging.h"
+#include "utils/logging.h"
 
 static bcdTime_t lastTriggerTime;
 static bool checkLastTriggerTime = false;

@@ -7,9 +7,6 @@
       <logicalFolder name="f1" displayName="hardware" projectFiles="true">
         <itemPath>src/hardware/PAM8407.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="logging" projectFiles="true">
-        <itemPath>src/logging/logging.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
@@ -47,9 +44,10 @@
         <itemPath>src/tasks/time.h</itemPath>
         <itemPath>src/tasks/player.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f5" displayName="time" projectFiles="true">
-        <itemPath>src/time/delay.h</itemPath>
-        <itemPath>src/time/millis.h</itemPath>
+      <logicalFolder name="f3" displayName="utils" projectFiles="true">
+        <itemPath>src/utils/delay.h</itemPath>
+        <itemPath>src/utils/millis.h</itemPath>
+        <itemPath>src/utils/logging.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="views" projectFiles="true">
         <itemPath>src/views/views.h</itemPath>
@@ -66,9 +64,6 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="hardware" projectFiles="true">
         <itemPath>src/hardware/PAM8407.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f5" displayName="logging" projectFiles="true">
-        <itemPath>src/logging/logging.c</itemPath>
       </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
@@ -110,9 +105,10 @@
         <itemPath>src/tasks/time.c</itemPath>
         <itemPath>src/tasks/player.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="time" projectFiles="true">
-        <itemPath>src/time/delay.c</itemPath>
-        <itemPath>src/time/millis.c</itemPath>
+      <logicalFolder name="f3" displayName="utils" projectFiles="true">
+        <itemPath>src/utils/millis.c</itemPath>
+        <itemPath>src/utils/delay.c</itemPath>
+        <itemPath>src/utils/logging.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="views" projectFiles="true">
         <itemPath>src/views/views.c</itemPath>
