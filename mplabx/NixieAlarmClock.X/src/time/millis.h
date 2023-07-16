@@ -14,8 +14,6 @@
 #ifndef _TIME_MILLIS_H_
 #define	_TIME_MILLIS_H_
 
-void ISR_Timer1(void);
-
 uint32_t TIME_Millis(void);
 
 #endif	/* _TIME_MILLIS_H_ */

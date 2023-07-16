@@ -84,8 +84,6 @@ int main(void)
     TIME_delay_ms(1);
     printf("\n\n");
     
-    TMR1_SetInterruptHandler(ISR_Timer1);
-    
     BTN_Initialize();
     VIEWS_Initialize();
     DISPLAY_Initialize();

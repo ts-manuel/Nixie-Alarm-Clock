@@ -21,7 +21,7 @@ static volatile uint32_t millis = 0;
 /*
  *  Timer 1 ISR fires every 1.0070801 ms
  */
-void ISR_Timer1(void)
+void TMR1_CallBack(void)
 {
     // Disable interrupts to increment the value atomically
     __builtin_disable_interrupts();
