@@ -9,7 +9,7 @@
 #define	TASK_ARGS_H
 
 #include "settings.h"
-#include "hardware/display.h"
+#include "tasks/display.h"
 #include "tasks/buttons.h"
 #include "rtcc.h"
 

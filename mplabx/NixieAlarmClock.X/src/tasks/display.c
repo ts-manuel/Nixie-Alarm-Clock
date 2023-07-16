@@ -1,11 +1,17 @@
+/* 
+ * File:   display.h
+ * Author: ts-manuel
+ *
+ * Display refresh task
+ */
 
-#include "display.h"
+#include "system.h"
+#include "pin_manager.h"
+#include "config.h"
 #include "time/delay.h"
 #include "time/millis.h"
+#include "display.h"
 
-
-#define _TOGGLE_PERIOD_ms      1000
-#define _H_CLK_PER_us   5
 
 typedef struct {
     uint8_t NEON_MO;
@@ -33,12 +39,8 @@ typedef struct {
 } DispState_t;
 
 
-
 static void ShiftDisplayState(DispState_t* d);
 static void ShiftData(uint8_t* data, uint8_t len);
-
-
-Disp_t display;
 
 static DispState_t Disp;
 
@@ -77,7 +79,6 @@ void DISPLAY_Initialize(void)
 }
 
 
-
 /*
  * Called in the main loop updates the state of the display
  * 
@@ -89,16 +90,16 @@ void DISPLAY_Update(void)
     uint32_t millis = TIME_Millis();
     uint8_t state[e_SEG_TGL_1 + 1];
     
-    if (millis - LastTogleMs > _TOGGLE_PERIOD_ms)
+    if (millis - LastTogleMs > _DISPLAY_TOGGLE_PERIOD_ms)
     {
         LastTogleMs = millis;
     }
     
     state[e_SEG_OFF]    = 0;
     state[e_SEG_ON]     = 1;
-    state[e_SEG_TGL]    = (millis - LastTogleMs) < _TOGGLE_PERIOD_ms / 2;
-    state[e_SEG_TGL_0]  = (millis - LastTogleMs) < _TOGGLE_PERIOD_ms / 8;
-    state[e_SEG_TGL_1]  = (millis - LastTogleMs) < _TOGGLE_PERIOD_ms - _TOGGLE_PERIOD_ms / 8;
+    state[e_SEG_TGL]    = (millis - LastTogleMs) < _DISPLAY_TOGGLE_PERIOD_ms / 2;
+    state[e_SEG_TGL_0]  = (millis - LastTogleMs) < _DISPLAY_TOGGLE_PERIOD_ms / 8;
+    state[e_SEG_TGL_1]  = (millis - LastTogleMs) < _DISPLAY_TOGGLE_PERIOD_ms - _DISPLAY_TOGGLE_PERIOD_ms / 8;
 
     
     Disp.NEON_MO = state[display.NEON_MO];
@@ -212,7 +213,7 @@ static void ShiftData(uint8_t* data, uint8_t len)
 {
     O_DSP_LATCH_SetLow();
     O_DSP_CLK_SetLow();
-    TIME_delay_us(_H_CLK_PER_us);
+    TIME_delay_us(_DISPLAY_HALF_CLK_us);
     
     for (int i = 0; i < len; i++)
     {
@@ -223,16 +224,16 @@ static void ShiftData(uint8_t* data, uint8_t len)
             else
                 O_DSP_DATA_SetLow();
             
-            TIME_delay_us(_H_CLK_PER_us);
+            TIME_delay_us(_DISPLAY_HALF_CLK_us);
             O_DSP_CLK_SetHigh();
-            TIME_delay_us(_H_CLK_PER_us);
+            TIME_delay_us(_DISPLAY_HALF_CLK_us);
             O_DSP_CLK_SetLow();
         }
     }
     
-    TIME_delay_us(_H_CLK_PER_us);
+    TIME_delay_us(_DISPLAY_HALF_CLK_us);
     O_DSP_LATCH_SetHigh();
-    TIME_delay_us(_H_CLK_PER_us);
+    TIME_delay_us(_DISPLAY_HALF_CLK_us);
     O_DSP_LATCH_SetLow();
     
     O_DSP_DATA_SetLow();

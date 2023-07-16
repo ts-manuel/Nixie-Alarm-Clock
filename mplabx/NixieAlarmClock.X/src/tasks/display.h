@@ -2,15 +2,15 @@
  * File:   display.h
  * Author: ts-manuel
  *
- * Created on October 31, 2022, 9:30 AM
+ * Display refresh task
  */
 
 #include <stdbool.h>
-#include "system.h"
-#include "pin_manager.h"
+#include <stdint.h>
 
-#ifndef DISPLAY_H
-#define	DISPLAY_H
+
+#ifndef _TASKS_DISPLAY_H_
+#define	_TASKS_DISPLAY_H_
 
 
 typedef enum {e_SEG_OFF = 0, e_SEG_ON, e_SEG_TGL, e_SEG_TGL_0, e_SEG_TGL_1} e_SegState_t;
@@ -41,11 +41,9 @@ typedef struct {
     uint8_t NIXIE_VAL_2;
     uint8_t NIXIE_VAL_3;
     uint8_t NIXIE_VAL_4;
-} Disp_t;
+} DispBuffer_t;
 
-
-extern Disp_t display;
-
+extern DispBuffer_t display;
 
 /**
  * Initialization of the display
@@ -67,5 +65,5 @@ void DISPLAY_Update(void);
 void DISPLAY_SetPower(bool b);
 
 
-#endif	/* DISPLAY_H */
+#endif	/* _TASKS_DISPLAY_H_ */
 

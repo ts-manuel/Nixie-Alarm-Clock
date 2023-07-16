@@ -9,7 +9,6 @@
       </logicalFolder>
       <logicalFolder name="f1" displayName="hardware" projectFiles="true">
         <itemPath>src/hardware/PAM8407.h</itemPath>
-        <itemPath>src/hardware/display.h</itemPath>
         <itemPath>src/hardware/player.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="logging" projectFiles="true">
@@ -47,6 +46,7 @@
       </logicalFolder>
       <logicalFolder name="f2" displayName="tasks" projectFiles="true">
         <itemPath>src/tasks/buttons.h</itemPath>
+        <itemPath>src/tasks/display.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.h</itemPath>
@@ -54,6 +54,7 @@
       </logicalFolder>
       <itemPath>src/settings.h</itemPath>
       <itemPath>src/alarm.h</itemPath>
+      <itemPath>src/config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -70,7 +71,6 @@
       </logicalFolder>
       <logicalFolder name="f1" displayName="hardware" projectFiles="true">
         <itemPath>src/hardware/PAM8407.c</itemPath>
-        <itemPath>src/hardware/display.c</itemPath>
         <itemPath>src/hardware/player.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="logging" projectFiles="true">
@@ -111,6 +111,7 @@
       </logicalFolder>
       <logicalFolder name="f2" displayName="tasks" projectFiles="true">
         <itemPath>src/tasks/buttons.c</itemPath>
+        <itemPath>src/tasks/display.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="time" projectFiles="true">
         <itemPath>src/time/delay.c</itemPath>
@@ -119,6 +120,7 @@
       <itemPath>src/main.c</itemPath>
       <itemPath>src/settings.c</itemPath>
       <itemPath>src/alarm.c</itemPath>
+      <itemPath>src/global.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

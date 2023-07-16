@@ -2,7 +2,7 @@
 
 #include "taskmanager.h"
 #include "task_args.h"
-#include "hardware/display.h"
+#include "tasks/display.h"
 #include "tasks/buttons.h"
 #include "settings.h"
 #include "alarm.h"
