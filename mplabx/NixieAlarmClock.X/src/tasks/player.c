@@ -69,7 +69,7 @@ static void VolumeDown(void);
 static FRESULT MountSD(FATFS* drive);
 static void UnmountSD(void);
 static uint16_t GetWavFileCount(void);
-static void FindRandomWAVName(char* fname, uint16_t fcount);
+static void FindRandomWAVName(char* fname);
 
 
 void PLAYER_Initialize(void)
@@ -128,7 +128,7 @@ static void Play(void)
 {
     FRESULT res;
     uint16_t wavCount;
-    char fname[FF_SFN_BUF];
+    char fname[FF_SFN_BUF + 1];
     
     // Try mounting the SD card
     if ((res = MountSD(&drive)) != FR_OK)
@@ -137,11 +137,8 @@ static void Play(void)
         return;
     }
     
-    // Find number of WAV files
-    wavCount = GetWavFileCount();
-    
     // Find random file
-    FindRandomWAVName(fname, wavCount);
+    FindRandomWAVName(fname);
     
     if ((res = f_open(&file, fname, FA_READ)) != FR_OK)
     {
@@ -305,12 +302,19 @@ static uint16_t GetWavFileCount(void)
  * @param fname
  * @param fcount
  */
-static void FindRandomWAVName(char* fname, uint16_t fcount)
+static void FindRandomWAVName(char* fname)
 {
     FFDIR dir;
     FILINFO fno;
     FRESULT res;
-    int index = rand() % fcount;
+    uint16_t wavCount;
+    uint16_t index;
+    
+    // Find number of WAV files
+    wavCount = GetWavFileCount();
+    
+    // Compute random index
+    index = rand() % wavCount;
     
     fname[0] = '\0';
     
@@ -320,14 +324,20 @@ static void FindRandomWAVName(char* fname, uint16_t fcount)
         return;
     }
     
-    /*for (uint16_t i = 0; i < index; i++)
+    LOG_TRACE0("PLAYER FindRandomWAVName(): searching for index %d\n", index);
+    
+    for (uint16_t i = 0; i < index; i++)
     {
+        LOG_TRACE0("PLAYER FindRandomWAVName(): loop %d\n", i);
+        
         if ((res = f_findnext(&dir, &fno)) != FR_OK)
         {
             LOG_ERROR("PLAYER FindRandomWAVName() - f_closedir exit code: %s\n", frToStr[res]);
             return;
         }
-    }*/
+    }
+    
+    LOG_TRACE0("PLAYER FindRandomWAVName(): strcpy %s\n", fno.fname);
     
     strcpy(fname, fno.fname);
 }
