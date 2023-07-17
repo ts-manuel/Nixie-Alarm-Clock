@@ -25,8 +25,8 @@ typedef struct
 
 
 // Reserve last page of flash for storing settings
-#define _FLASH_STORAGE_ADDR 0xab00
-uint8_t __attribute__((space(prog), address(_FLASH_STORAGE_ADDR), noload, keep, unused)) flashStorage[FLASH_ERASE_PAGE_SIZE_IN_INSTRUCTIONS];
+#define _FLASH_STORAGE_ADDR 0xa700
+uint16_t __attribute__((space(prog), address(_FLASH_STORAGE_ADDR), noload, keep, unused)) flashStorage[FLASH_ERASE_PAGE_SIZE_IN_INSTRUCTIONS];
 
 uint16_t  __attribute__((aligned(4))) rowBuffer[FLASH_WRITE_ROW_SIZE_IN_INSTRUCTIONS];
 
@@ -78,23 +78,6 @@ void SETTINGS_Initialize(void)
         // Clear alarm slots
         memset(alarmSlots, 0, sizeof(AlarmSlot_t) * _ALARM_SLOT_COUNT);
     }
-    
-    /*LOG_INFO("Memory Dump\n");
-    
-    
-    //for (uint32_t addr = 0x00a6fe; addr < 0x00AFFE; addr += 8)
-    for (uint32_t addr = _FLASH_STORAGE_ADDR; addr < _FLASH_STORAGE_ADDR + 128; addr += 16)
-    {
-        uint16_t data0 = FLASH_ReadWord16(addr);
-        uint16_t data1 = FLASH_ReadWord16(addr+2);
-        uint16_t data2 = FLASH_ReadWord16(addr+4);
-        uint16_t data3 = FLASH_ReadWord16(addr+6);
-        uint16_t data4 = FLASH_ReadWord16(addr+8);
-        uint16_t data5 = FLASH_ReadWord16(addr+10);
-        uint16_t data6 = FLASH_ReadWord16(addr+12);
-        uint16_t data7 = FLASH_ReadWord16(addr+14);
-        LOG_INFO("0x%04lx: 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n", addr, data0, data1, data2, data3, data4, data5, data6, data7);
-    }*/
 }
 
 

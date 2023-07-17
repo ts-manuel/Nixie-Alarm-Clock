@@ -66,7 +66,7 @@
 
 
 #define _FW_VER_MAJ 0
-#define _FW_VER_MIN 1
+#define _FW_VER_MIN 2
 
 
 /*
@@ -77,9 +77,9 @@ int main(void)
     // initialize the device
     SYSTEM_Initialize();
     
-    // Set UART1 to 9600 code-configurator doesn't support 7.168 MHz as clock frequency
-    //U1BRG = 0x174;
-    U1BRG = 186;
+    // Set UART1 baud rate, code-configurator doesn't support 7.168 MHz as clock frequency
+    //U1BRG = 0x174; // 9600
+    U1BRG = 186;    // 19200
     TIME_delay_ms(1);
     printf("\n\n");
     
