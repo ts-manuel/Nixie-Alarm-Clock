@@ -1,5 +1,5 @@
 # Nixie Alarm Clock
-![Board_3D_TOP.png](images/Front.png)
+![Front.png](images/Front.png)
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
